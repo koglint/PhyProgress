@@ -39,6 +39,12 @@ html, body {
   border-radius: 8px;
 }
 
+.task input[type="checkbox"] {
+  display: block;
+  margin-bottom: 5px; /* Optional: add spacing between checkboxes */
+}
+
+
 .link-button {
   width: 30px;
   height: 30px;
