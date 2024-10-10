@@ -33,17 +33,16 @@ html, body {
 }
 
 .task {
-  display: flex; /* Makes elements align horizontally */
-  align-items: center; /* Centers items vertically within the task div */
+  display: flex;
+  align-items: flex-start; /* Align items to the top */
   padding: 10px;
   border-radius: 8px;
 }
 
-.task input[type="checkbox"] {
-  display: block;
-  margin-bottom: 5px; /* Optional: add spacing between checkboxes */
+.checkbox-container {
+  display: block; /* Ensure checkboxes are displayed vertically */
+  margin-left: 10px; /* Space between button and checkboxes */
 }
-
 
 .link-button {
   width: 30px;
@@ -52,20 +51,18 @@ html, body {
   color: #ffffff;
   border: none;
   border-radius: 5px;
-  margin-right: 10px;
   cursor: pointer;
   text-align: center;
   line-height: 30px; /* Centers text vertically */
 }
 
 .link-button a {
-  color: inherit; /* Inherit color from button */
+  color: inherit;
   text-decoration: none;
   display: block;
   width: 100%;
   height: 100%;
 }
-
 
 .red { background-color: #ffcccc; }
 .orange { background-color: #ffebcc; }
