@@ -91,7 +91,7 @@
 
 function generateChecklist() {
   taskChecklist.innerHTML = '';
-  for (const [section, lessonCount] of Object.entries(lessonsData)) {
+  for (const [section, lessonCount] of Object.entries(lessonData)) {
     for (let i = 1; i <= lessonCount; i++) {
       const lessonName = lessonNames[section] && lessonNames[section][i - 1]
         ? lessonNames[section][i - 1]
