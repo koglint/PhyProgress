@@ -134,43 +134,64 @@
       }
     }
 
-    // Load task progress for lessons from Firestore
-    async function loadTaskProgress(uid) {
-      try {
-        const docRef = doc(db, "tasks", uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const tasks = docSnap.data().tasks;
-          console.log("Task progress loaded:", tasks);
-          for (const [lesson, progress] of Object.entries(tasks)) {
-            const lessonNum = lesson.split(" ")[2];
-            console.log(`Processing lesson number: ${lessonNum}`);
-
-            const startedCheckbox = document.getElementById(`started-${lessonNum}`);
-            if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
-              console.log(`started-${lessonNum} set to ${startedCheckbox.checked}`);
-
-            const completedCheckbox = document.getElementById(`completed-${lessonNum}`);
-            if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
-              console.log(`completed-${lessonNum} set to ${completedCheckbox.checked}`);
-
-            const checkedCheckbox = document.getElementById(`checked-${lessonNum}`);
-            if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
-              console.log(`checked-${lessonNum} set to ${checkedCheckbox.checked}`);
-
-            const masteredCheckbox = document.getElementById(`mastered-${lessonNum}`);
-            if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
-              console.log(`mastered-${lessonNum} set to ${masteredCheckbox.checked}`);
-
-          }
-          console.log("Checkboxes updated to reflect task progress.");
+   async function loadTaskProgress(uid) {
+  try {
+    const docRef = doc(db, "tasks", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const tasks = docSnap.data().tasks;
+      const lessonNumberMap = {
+        "One": "1",
+        "Two": "2",
+        "Three": "3"
+      };
+      
+      for (const [lesson, progress] of Object.entries(tasks)) {
+        const lessonWord = lesson.split(" ")[2];
+        const lessonNum = lessonNumberMap[lessonWord] || lessonWord;
+        console.log(`Processing lesson number: ${lessonNum}`);
+        
+        const startedCheckbox = document.getElementById(`started-${lessonNum}`);
+        if (startedCheckbox) {
+          startedCheckbox.checked = Boolean(progress.started);
+          console.log(`Checkbox 'started-${lessonNum}' set to ${startedCheckbox.checked}`);
         } else {
-          console.log("No task progress found for this user.");
+          console.warn(`Checkbox 'started-${lessonNum}' not found`);
         }
-      } catch (error) {
-        console.error("Error loading task progress:", error);
+        
+        const completedCheckbox = document.getElementById(`completed-${lessonNum}`);
+        if (completedCheckbox) {
+          completedCheckbox.checked = Boolean(progress.completed);
+          console.log(`Checkbox 'completed-${lessonNum}' set to ${completedCheckbox.checked}`);
+        } else {
+          console.warn(`Checkbox 'completed-${lessonNum}' not found`);
+        }
+        
+        const checkedCheckbox = document.getElementById(`checked-${lessonNum}`);
+        if (checkedCheckbox) {
+          checkedCheckbox.checked = Boolean(progress.checked);
+          console.log(`Checkbox 'checked-${lessonNum}' set to ${checkedCheckbox.checked}`);
+        } else {
+          console.warn(`Checkbox 'checked-${lessonNum}' not found`);
+        }
+        
+        const masteredCheckbox = document.getElementById(`mastered-${lessonNum}`);
+        if (masteredCheckbox) {
+          masteredCheckbox.checked = Boolean(progress.mastered);
+          console.log(`Checkbox 'mastered-${lessonNum}' set to ${masteredCheckbox.checked}`);
+        } else {
+          console.warn(`Checkbox 'mastered-${lessonNum}' not found`);
+        }
       }
+      console.log("Checkboxes updated to reflect task progress.");
+    } else {
+      console.log("No task progress found for this user.");
     }
+  } catch (error) {
+    console.error("Error loading task progress:", error);
+  }
+}
+
 
     function updateStatus(isLoggedIn, userData = null) {
       if (isLoggedIn && userData) {
