@@ -1,136 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login/Register</title>
-  <style>
-    #authStatus {
-      font-size: small;
-      position: absolute;
-      top: 10px;
-      right: 10px;
-    }
-    #authContainer {
-      border: 1px solid #ccc;
-      padding: 15px;
-      margin: 15px;
-    }
-  </style>
-</head>
-<body>
-  <div id="authStatus">Status: <span id="statusIcon">Logged Out</span></div>
+import { setDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-  <h1>Student Login</h1>
+export async function saveTaskProgress(uid, tasks) {
+  try {
+    await setDoc(doc(db, "tasks", uid), { tasks });
+    console.log("Task progress saved successfully.");
+  } catch (error) {
+    console.error("Error saving task progress:", error);
+  }
+}
 
-  <!-- Collapsible Login/Register Form -->
-  <details id="authContainer" open>
-    <summary>Register/Login/Logout</summary>
-    <div id="authForm">
-      <!-- Register Form -->
-      <div id="registerForm">
-        <h2>Register</h2>
-        <input type="email" id="registerEmail" placeholder="Email" required>
-        <input type="password" id="registerPassword" placeholder="Password" required><br>
-        <input type="text" id="registerFirstName" placeholder="First Name" required>
-        <input type="text" id="registerLastName" placeholder="Last Name" required><br>
-        <button onclick="handleRegister()">Register</button>
-      </div>
-
-      <!-- Login Form -->
-      <div id="loginForm">
-        <h2>Login</h2>
-        <input type="email" id="loginEmail" placeholder="Email" required>
-        <input type="password" id="loginPassword" placeholder="Password" required>
-        <button onclick="handleLogin()">Login</button>
-      </div>
-
-      <!-- Logout Button -->
-      <button onclick="handleLogout()" id="logoutButton" style="display:none;">Logout</button>
-    </div>
-  </details>
-
-  <script type="module">
-    import { register, login, logout, saveUserData, loadUserData, initAuthListener } from './firebase.js';
-
-    const statusIcon = document.getElementById('statusIcon');
-    const logoutButton = document.getElementById('logoutButton');
-
-    // Update the status icon and toggle the logout button
-    function updateStatus(isLoggedIn, userData = null) {
-      statusIcon.textContent = isLoggedIn ? "Logged In" : "Logged Out";
-      logoutButton.style.display = isLoggedIn ? "block" : "none";
-      if (userData) {
-        alert(`Welcome back, ${userData.firstName}`);
+export async function loadTaskProgress(uid) {
+  try {
+    const docRef = doc(db, "tasks", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const tasks = docSnap.data().tasks;
+      for (const [key, value] of Object.entries(tasks)) {
+        for (const [task, checked] of Object.entries(value)) {
+          document.getElementById(`${task}-${key.split(" ")[2]}`).checked = checked;
+        }
       }
+    } else {
+      console.log("No task progress found.");
     }
-
-    // Initialize auth listener to check if the user is logged in on page load
-    initAuthListener((user) => {
-      if (user) {
-        loadUserData(user.uid).then(userData => {
-          updateStatus(true, userData);
-        });
-      } else {
-        updateStatus(false);
-      }
-    });
-
-    // Register function with Firestore data saving
-    window.handleRegister = function() {
-      const email = document.getElementById('registerEmail').value;
-      const password = document.getElementById('registerPassword').value;
-      const firstName = document.getElementById('registerFirstName').value;
-      const lastName = document.getElementById('registerLastName').value;
-
-      register(email, password)
-        .then(userCredential => {
-          const user = userCredential.user;
-          saveUserData(user.uid, firstName, lastName);
-          alert(`Registration successful! Welcome ${firstName}`);
-          updateStatus(true);
-        })
-        .catch(error => {
-          console.error("Error registering:", error);
-          alert("Registration failed: " + error.message);
-        });
-    }
-
-    // Login function with data loading
-    window.handleLogin = function() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-
-      login(email, password)
-        .then(userCredential => {
-          const user = userCredential.user;
-          loadUserData(user.uid).then(userData => {
-            if (userData) {
-              alert(`Login successful! Welcome back, ${userData.firstName}`);
-            } else {
-              alert("Login successful! Welcome back!");
-            }
-            updateStatus(true);
-          });
-        })
-        .catch(error => {
-          console.error("Error logging in:", error);
-          alert("Login failed: " + error.message);
-        });
-    }
-
-    // Logout function
-    window.handleLogout = function() {
-      logout()
-        .then(() => {
-          alert("Logout successful!");
-          updateStatus(false);
-        })
-        .catch(error => {
-          console.error("Error logging out:", error);
-          alert("Logout failed: " + error.message);
-        });
-    }
-  </script>
-</body>
-</html>
+  } catch (error) {
+    console.error("Error loading task progress:", error);
+  }
+}
