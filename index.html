@@ -135,8 +135,9 @@ function generateChecklist() {
       updateTaskColor(lessonKey); // Initial color update
     }
   }
-  taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
+  taskChecklist.innerHTML += `<button class="save-progress-button" onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 
 
@@ -211,16 +212,26 @@ async function loadTaskProgress(uid) {
 
     
 
-    function updateStatus(isLoggedIn, userData = null) {
-      if (isLoggedIn && userData) {
-        const fullName = `${userData.firstName} ${userData.lastName}`;
-        statusIcon.textContent = `Logged in as: ${fullName}`;
-      } else {
-        statusIcon.textContent = "Logged Out";
-      }
-      logoutButton.style.display = isLoggedIn ? "block" : "none";
-      taskChecklist.style.display = isLoggedIn ? "block" : "none";
-    }
+function updateStatus(isLoggedIn, userData = null) {
+  const registerForm = document.getElementById('registerForm');
+  if (isLoggedIn && userData) {
+    const fullName = `${userData.firstName} ${userData.lastName}`;
+    statusIcon.textContent = `Logged in as: ${fullName}`;
+    registerForm.style.display = 'none';  // Hide register form when logged in
+  } else {
+    statusIcon.textContent = "Logged Out";
+    registerForm.style.display = 'block';  // Show register form when logged out
+  }
+  logoutButton.style.display = isLoggedIn ? "block" : "none";
+  taskChecklist.style.display = isLoggedIn ? "block" : "none";
+}
+
+
+
+
+
+
+    
 
     function initAuthListener() {
       onAuthStateChanged(auth, async (user) => {
