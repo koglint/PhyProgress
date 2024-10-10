@@ -85,225 +85,196 @@
   <button onclick="saveProgress()">Save Progress</button>
 </section>
 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "API_KEY",
+    authDomain: "DOMAIN",
+    projectId: "PROJECT_ID",
+    storageBucket: "BUCKET",
+    messagingSenderId: "SENDER_ID",
+    appId: "APP_ID"
+  };
 
-    // Firebase configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
-      authDomain: "koglinsphysicsclass.firebaseapp.com",
-      projectId: "koglinsphysicsclass",
-      storageBucket: "koglinsphysicsclass.appspot.com",
-      messagingSenderId: "1051481871959",
-      appId: "1:1051481871959:web:40bc24648d3a4f91f87512"
-    };
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth();
+  const db = getFirestore(app);
 
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth();
-    const db = getFirestore(app);
-
-    // Set persistence
-    setPersistence(auth, browserLocalPersistence).catch((error) => {
+  // Set persistence
+  setPersistence(auth, browserLocalPersistence)
+    .then(() => initAuthListener())
+    .catch((error) => {
       console.error("Error setting persistence:", error);
     });
 
-    const statusIcon = document.getElementById('statusIcon');
-    const logoutButton = document.getElementById('logoutButton');
-    const taskChecklist = document.getElementById('taskChecklist');
+  const statusIcon = document.getElementById('statusIcon');
+  const logoutButton = document.getElementById('logoutButton');
+  const taskChecklist = document.getElementById('taskChecklist');
 
-
-
-
-    // Register function
-    window.handleRegister = function() {
-      const email = document.getElementById('registerEmail').value;
-      const password = document.getElementById('registerPassword').value;
-      const firstName = document.getElementById('registerFirstName').value;
-      const lastName = document.getElementById('registerLastName').value;
-
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          const user = userCredential.user;
-          saveUserData(user.uid, firstName, lastName);
-          alert(`Registration successful! Welcome ${firstName}`);
-          updateStatus(true);
-          loadTaskProgress(user.uid);  // Load progress immediately after registration
-        })
-        .catch(error => {
-          console.error("Error registering:", error);
-          alert("Registration failed: " + error.message);
-        });
+  async function loadUserData(uid) {
+    try {
+      const docRef = doc(db, "users", uid);
+      const docSnap = await getDoc(docRef);
+      return docSnap.exists() ? docSnap.data() : null;
+    } catch (error) {
+      console.error("Error loading user data:", error);
+      return null;
     }
-
-    // Login function
-    window.handleLogin = function() {
-      const email = document.getElementById('loginEmail').value;
-      const password = document.getElementById('loginPassword').value;
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then(userCredential => {
-          const user = userCredential.user;
-          loadUserData(user.uid).then(userData => {
-            updateStatus(true, userData);
-            loadTaskProgress(user.uid);  // Ensure loading happens after updating the status
-          });
-        })
-        .catch(error => {
-          console.error("Error logging in:", error);
-          alert("Login failed: " + error.message);
-        });
-    }
-
-    // Logout function
-    window.handleLogout = function() {
-      signOut(auth)
-        .then(() => {
-          alert("Logout successful!");
-          updateStatus(false);
-        })
-        .catch(error => {
-          console.error("Error logging out:", error);
-          alert("Logout failed: " + error.message);
-        });
-    }
-
-    // Save user data to Firestore
-    async function saveUserData(uid, firstName, lastName) {
-      try {
-        await setDoc(doc(db, "users", uid), {
-          firstName: firstName,
-          lastName: lastName
-        });
-        console.log("User data saved successfully.");
-      } catch (error) {
-        console.error("Error saving user data:", error);
-      }
-    }
-
-    // Load user data from Firestore
-    async function loadUserData(uid) {
-      try {
-        const docRef = doc(db, "users", uid);
-        const docSnap = await getDoc(docRef);
-        return docSnap.exists() ? docSnap.data() : null;
-      } catch (error) {
-        console.error("Error loading user data:", error);
-        return null;
-      }
-    }
-
-    // Save task progress for lessons to Firestore
-    async function saveTaskProgress(uid, tasks) {
-      try {
-        await setDoc(doc(db, "tasks", uid), { tasks });
-        console.log("Task progress saved successfully.");
-      } catch (error) {
-        console.error("Error saving task progress:", error);
-      }
-    }
-
-// Load task progress for lessons from Firestore
-async function loadTaskProgress(uid) {
-  try {
-    const docRef = doc(db, "tasks", uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const tasks = docSnap.data().tasks;
-      // Explicitly check each checkbox by direct reference
-      for (const [lesson, progress] of Object.entries(tasks)) {
-        const lessonNum = lesson.split(" ")[2]; // Get lesson number, like "1" from "5.1 Lesson One"
-        
-        const startedCheckbox = document.getElementById(`started-${lessonNum}`);
-        if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
-        
-        const completedCheckbox = document.getElementById(`completed-${lessonNum}`);
-        if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
-        
-        const checkedCheckbox = document.getElementById(`checked-${lessonNum}`);
-        if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
-        
-        const masteredCheckbox = document.getElementById(`mastered-${lessonNum}`);
-        if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
-      }
-      console.log("Task progress loaded successfully.");
-    } else {
-      console.log("No task progress found for this user.");
-    }
-  } catch (error) {
-    console.error("Error loading task progress:", error);
   }
-}
 
-
-   // Initialize an auth listener to persist the user's session and handle state changes
-function initAuthListener() {
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const userData = await loadUserData(user.uid);
-      if (userData) {
-        updateStatus(true, userData);
-        loadTaskProgress(user.uid); // Load task progress when the user is logged in
-      } else {
-        console.error("User data not found.");
-      }
-    } else {
-      updateStatus(false);
-    }
-  });
-}
-
-function updateStatus(isLoggedIn, userData = null) {
-  if (isLoggedIn && userData) {
-    const fullName = `${userData.firstName} ${userData.lastName}`;
-    statusIcon.textContent = `Logged in as: ${fullName}`;
-  } else {
-    statusIcon.textContent = "Logged Out";
-  }
-  
-  logoutButton.style.display = isLoggedIn ? "block" : "none";
-  taskChecklist.style.display = isLoggedIn ? "block" : "none";
-}
-
-// Register the auth listener when the page loads
-initAuthListener();
-
-
-
-
-    // Save progress handler
-    window.saveProgress = function() {
-      const tasks = {
-        "5.1 Lesson One": {
-          started: document.getElementById('started-1').checked,
-          completed: document.getElementById('completed-1').checked,
-          checked: document.getElementById('checked-1').checked,
-          mastered: document.getElementById('mastered-1').checked
-        },
-        "5.1 Lesson Two": {
-          started: document.getElementById('started-2').checked,
-          completed: document.getElementById('completed-2').checked,
-          checked: document.getElementById('checked-2').checked,
-          mastered: document.getElementById('mastered-2').checked
-        },
-        "5.1 Lesson Three": {
-          started: document.getElementById('started-3').checked,
-          completed: document.getElementById('completed-3').checked,
-          checked: document.getElementById('checked-3').checked,
-          mastered: document.getElementById('mastered-3').checked
+  async function loadTaskProgress(uid) {
+    try {
+      const docRef = doc(db, "tasks", uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        const tasks = docSnap.data().tasks;
+        for (const [lesson, progress] of Object.entries(tasks)) {
+          const lessonNum = lesson.split(" ")[2];
+          const startedCheckbox = document.getElementById(`started-${lessonNum}`);
+          if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
+          
+          const completedCheckbox = document.getElementById(`completed-${lessonNum}`);
+          if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
+          
+          const checkedCheckbox = document.getElementById(`checked-${lessonNum}`);
+          if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
+          
+          const masteredCheckbox = document.getElementById(`mastered-${lessonNum}`);
+          if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
         }
-      };
-      const user = auth.currentUser;
-      if (user) {
-        saveTaskProgress(user.uid, tasks);
-        alert("Progress saved!");
+        console.log("Task progress loaded successfully.");
       } else {
-        alert("Please log in to save progress.");
+        console.log("No task progress found for this user.");
+      }
+    } catch (error) {
+      console.error("Error loading task progress:", error);
+    }
+  }
+
+  function updateStatus(isLoggedIn, userData = null) {
+    if (isLoggedIn && userData) {
+      const fullName = `${userData.firstName} ${userData.lastName}`;
+      statusIcon.textContent = `Logged in as: ${fullName}`;
+    } else {
+      statusIcon.textContent = "Logged Out";
+    }
+    
+    logoutButton.style.display = isLoggedIn ? "block" : "none";
+    taskChecklist.style.display = isLoggedIn ? "block" : "none";
+  }
+
+  function initAuthListener() {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const userData = await loadUserData(user.uid);
+        if (userData) {
+          updateStatus(true, userData);
+          await loadTaskProgress(user.uid);
+        } else {
+          console.error("User data not found.");
+          updateStatus(false);
+        }
+      } else {
+        updateStatus(false);
+      }
+    });
+  }
+
+  window.handleRegister = function() {
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    const firstName = document.getElementById('registerFirstName').value;
+    const lastName = document.getElementById('registerLastName').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+        saveUserData(user.uid, firstName, lastName);
+        alert(`Registration successful! Welcome ${firstName}`);
+        loadTaskProgress(user.uid);  
+      })
+      .catch(error => {
+        console.error("Error registering:", error);
+        alert("Registration failed: " + error.message);
+      });
+  }
+
+  window.handleLogin = function() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+      .then(userCredential => {
+        const user = userCredential.user;
+        loadUserData(user.uid).then(userData => {
+          updateStatus(true, userData);
+          loadTaskProgress(user.uid);
+        });
+      })
+      .catch(error => {
+        console.error("Error logging in:", error);
+        alert("Login failed: " + error.message);
+      });
+  }
+
+  window.handleLogout = function() {
+    signOut(auth)
+      .then(() => {
+        alert("Logout successful!");
+        updateStatus(false);
+      })
+      .catch(error => {
+        console.error("Error logging out:", error);
+        alert("Logout failed: " + error.message);
+      });
+  }
+
+  async function saveUserData(uid, firstName, lastName) {
+    try {
+      await setDoc(doc(db, "users", uid), {
+        firstName: firstName,
+        lastName: lastName
+      });
+      console.log("User data saved successfully.");
+    } catch (error) {
+      console.error("Error saving user data:", error);
+    }
+  }
+
+  window.saveProgress = function() {
+    const tasks = {
+      "5.1 Lesson One": {
+        started: document.getElementById('started-1').checked,
+        completed: document.getElementById('completed-1').checked,
+        checked: document.getElementById('checked-1').checked,
+        mastered: document.getElementById('mastered-1').checked
+      },
+      "5.1 Lesson Two": {
+        started: document.getElementById('started-2').checked,
+        completed: document.getElementById('completed-2').checked,
+        checked: document.getElementById('checked-2').checked,
+        mastered: document.getElementById('mastered-2').checked
+      },
+      "5.1 Lesson Three": {
+        started: document.getElementById('started-3').checked,
+        completed: document.getElementById('completed-3').checked,
+        checked: document.getElementById('checked-3').checked,
+        mastered: document.getElementById('mastered-3').checked
       }
     };
-  </script>
+    const user = auth.currentUser;
+    if (user) {
+      saveTaskProgress(user.uid, tasks);
+      alert("Progress saved!");
+    } else {
+      alert("Please log in to save progress.");
+    }
+  }
+</script>
 </body>
 </html>
