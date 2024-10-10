@@ -221,10 +221,19 @@ async function loadTaskProgress(uid) {
       const tasks = docSnap.data().tasks;
       // Explicitly check each checkbox by direct reference
       for (const [lesson, progress] of Object.entries(tasks)) {
-        document.getElementById(`started-${lesson.split(" ")[2]}`).checked = Boolean(progress.started);
-        document.getElementById(`completed-${lesson.split(" ")[2]}`).checked = Boolean(progress.completed);
-        document.getElementById(`checked-${lesson.split(" ")[2]}`).checked = Boolean(progress.checked);
-        document.getElementById(`mastered-${lesson.split(" ")[2]}`).checked = Boolean(progress.mastered);
+        const lessonNum = lesson.split(" ")[2]; // Get lesson number, like "1" from "5.1 Lesson One"
+        
+        const startedCheckbox = document.getElementById(`started-${lessonNum}`);
+        if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
+        
+        const completedCheckbox = document.getElementById(`completed-${lessonNum}`);
+        if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
+        
+        const checkedCheckbox = document.getElementById(`checked-${lessonNum}`);
+        if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
+        
+        const masteredCheckbox = document.getElementById(`mastered-${lessonNum}`);
+        if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
       }
       console.log("Task progress loaded successfully.");
     } else {
@@ -234,6 +243,7 @@ async function loadTaskProgress(uid) {
     console.error("Error loading task progress:", error);
   }
 }
+
 
 
 
