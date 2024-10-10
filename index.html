@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -36,7 +35,6 @@
   <details id="authContainer">
     <summary>Register/Login/Logout</summary>
     <div id="authForm">
-      <!-- Register Form -->
       <div id="registerForm">
         <h2>Register</h2>
         <input type="email" id="registerEmail" placeholder="Email" required>
@@ -45,16 +43,12 @@
         <input type="text" id="registerLastName" placeholder="Last Name" required><br>
         <button onclick="handleRegister()">Register</button>
       </div>
-
-      <!-- Login Form -->
       <div id="loginForm">
         <h2>Login</h2>
         <input type="email" id="loginEmail" placeholder="Email" required>
         <input type="password" id="loginPassword" placeholder="Password" required>
         <button onclick="handleLogin()">Login</button>
       </div>
-
-      <!-- Logout Button -->
       <button onclick="handleLogout()" id="logoutButton" style="display:none;">Logout</button>
     </div>
   </details>
@@ -62,28 +56,6 @@
   <!-- Checklist Section for Lesson Progress -->
   <section id="taskChecklist" style="display:none;">
     <h2>Lesson Checklist</h2>
-    <div class="task">
-      <label for="started-1">5.1 Lesson One:</label>
-      <input type="checkbox" id="started-1"> Started
-      <input type="checkbox" id="completed-1"> Completed
-      <input type="checkbox" id="checked-1"> Checked
-      <input type="checkbox" id="mastered-1"> Mastered
-    </div>
-    <div class="task">
-      <label for="started-2">5.1 Lesson Two:</label>
-      <input type="checkbox" id="started-2"> Started
-      <input type="checkbox" id="completed-2"> Completed
-      <input type="checkbox" id="checked-2"> Checked
-      <input type="checkbox" id="mastered-2"> Mastered
-    </div>
-    <div class="task">
-      <label for="started-3">5.1 Lesson Three:</label>
-      <input type="checkbox" id="started-3"> Started
-      <input type="checkbox" id="completed-3"> Completed
-      <input type="checkbox" id="checked-3"> Checked
-      <input type="checkbox" id="mastered-3"> Mastered
-    </div>
-    <button onclick="saveProgress()">Save Progress</button>
   </section>
 
   <script type="module">
@@ -91,7 +63,6 @@
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
-    // Firebase configuration
     const firebaseConfig = {
       apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
       authDomain: "koglinsphysicsclass.firebaseapp.com",
@@ -101,12 +72,10 @@
       appId: "1:1051481871959:web:40bc24648d3a4f91f87512"
     };
 
-    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const auth = getAuth();
     const db = getFirestore(app);
 
-    // Set persistence and initialize auth listener
     setPersistence(auth, browserLocalPersistence)
       .then(() => initAuthListener())
       .catch((error) => {
@@ -117,82 +86,57 @@
     const logoutButton = document.getElementById('logoutButton');
     const taskChecklist = document.getElementById('taskChecklist');
 
-    // Load user data from Firestore
-    async function loadUserData(uid) {
+    const lessonsData = {
+      '5.1': 7,
+      '5.2': 6,
+      '6.1': 5,
+      // Expand as needed with format 'section': number_of_lessons
+    };
+
+    function generateChecklist() {
+      taskChecklist.innerHTML = '';
+      for (const [section, lessonCount] of Object.entries(lessonsData)) {
+        for (let i = 1; i <= lessonCount; i++) {
+          const taskDiv = document.createElement('div');
+          taskDiv.className = 'task';
+          taskDiv.innerHTML = `
+            <label for="started-${section}-${i}">${section} Lesson ${i}:</label>
+            <input type="checkbox" id="started-${section}-${i}"> Started
+            <input type="checkbox" id="completed-${section}-${i}"> Completed
+            <input type="checkbox" id="checked-${section}-${i}"> Checked
+            <input type="checkbox" id="mastered-${section}-${i}"> Mastered
+          `;
+          taskChecklist.appendChild(taskDiv);
+        }
+      }
+      taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
+    }
+
+    async function loadTaskProgress(uid) {
       try {
-        const docRef = doc(db, "users", uid);
+        const docRef = doc(db, "tasks", uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          console.log("User data loaded:", docSnap.data());
-          return docSnap.data();
+          const tasks = docSnap.data().tasks;
+          for (const [key, progress] of Object.entries(tasks)) {
+            const startedCheckbox = document.getElementById(`started-${key}`);
+            const completedCheckbox = document.getElementById(`completed-${key}`);
+            const checkedCheckbox = document.getElementById(`checked-${key}`);
+            const masteredCheckbox = document.getElementById(`mastered-${key}`);
+
+            if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
+            if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
+            if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
+            if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
+          }
+          console.log("Checkboxes updated to reflect task progress.");
         } else {
-          console.log("No user data found.");
-          return null;
+          console.log("No task progress found for this user.");
         }
       } catch (error) {
-        console.error("Error loading user data:", error);
-        return null;
+        console.error("Error loading task progress:", error);
       }
     }
-
-   async function loadTaskProgress(uid) {
-  try {
-    const docRef = doc(db, "tasks", uid);
-    const docSnap = await getDoc(docRef);
-    if (docSnap.exists()) {
-      const tasks = docSnap.data().tasks;
-      const lessonNumberMap = {
-        "One": "1",
-        "Two": "2",
-        "Three": "3"
-      };
-      
-      for (const [lesson, progress] of Object.entries(tasks)) {
-        const lessonWord = lesson.split(" ")[2];
-        const lessonNum = lessonNumberMap[lessonWord] || lessonWord;
-        console.log(`Processing lesson number: ${lessonNum}`);
-        
-        const startedCheckbox = document.getElementById(`started-${lessonNum}`);
-        if (startedCheckbox) {
-          startedCheckbox.checked = Boolean(progress.started);
-          console.log(`Checkbox 'started-${lessonNum}' set to ${startedCheckbox.checked}`);
-        } else {
-          console.warn(`Checkbox 'started-${lessonNum}' not found`);
-        }
-        
-        const completedCheckbox = document.getElementById(`completed-${lessonNum}`);
-        if (completedCheckbox) {
-          completedCheckbox.checked = Boolean(progress.completed);
-          console.log(`Checkbox 'completed-${lessonNum}' set to ${completedCheckbox.checked}`);
-        } else {
-          console.warn(`Checkbox 'completed-${lessonNum}' not found`);
-        }
-        
-        const checkedCheckbox = document.getElementById(`checked-${lessonNum}`);
-        if (checkedCheckbox) {
-          checkedCheckbox.checked = Boolean(progress.checked);
-          console.log(`Checkbox 'checked-${lessonNum}' set to ${checkedCheckbox.checked}`);
-        } else {
-          console.warn(`Checkbox 'checked-${lessonNum}' not found`);
-        }
-        
-        const masteredCheckbox = document.getElementById(`mastered-${lessonNum}`);
-        if (masteredCheckbox) {
-          masteredCheckbox.checked = Boolean(progress.mastered);
-          console.log(`Checkbox 'mastered-${lessonNum}' set to ${masteredCheckbox.checked}`);
-        } else {
-          console.warn(`Checkbox 'mastered-${lessonNum}' not found`);
-        }
-      }
-      console.log("Checkboxes updated to reflect task progress.");
-    } else {
-      console.log("No task progress found for this user.");
-    }
-  } catch (error) {
-    console.error("Error loading task progress:", error);
-  }
-}
-
 
     function updateStatus(isLoggedIn, userData = null) {
       if (isLoggedIn && userData) {
@@ -208,17 +152,15 @@
     function initAuthListener() {
       onAuthStateChanged(auth, async (user) => {
         if (user) {
-          console.log("User is logged in:", user.uid);
           const userData = await loadUserData(user.uid);
           if (userData) {
             updateStatus(true, userData);
+            generateChecklist();
             await loadTaskProgress(user.uid);
           } else {
-            console.error("User data not found.");
             updateStatus(false);
           }
         } else {
-          console.log("User is logged out.");
           updateStatus(false);
         }
       });
@@ -232,10 +174,8 @@
 
       createUserWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
-          const user = userCredential.user;
-          saveUserData(user.uid, firstName, lastName);
+          saveUserData(userCredential.user.uid, firstName, lastName);
           alert(`Registration successful! Welcome ${firstName}`);
-          loadTaskProgress(user.uid);  
         })
         .catch(error => {
           console.error("Error registering:", error);
@@ -249,10 +189,10 @@
 
       signInWithEmailAndPassword(auth, email, password)
         .then(userCredential => {
-          const user = userCredential.user;
-          loadUserData(user.uid).then(userData => {
+          loadUserData(userCredential.user.uid).then(userData => {
             updateStatus(true, userData);
-            loadTaskProgress(user.uid);
+            generateChecklist();
+            loadTaskProgress(userCredential.user.uid);
           });
         })
         .catch(error => {
@@ -275,13 +215,32 @@
 
     async function saveUserData(uid, firstName, lastName) {
       try {
-        await setDoc(doc(db, "users", uid), {
-          firstName: firstName,
-          lastName: lastName
-        });
+        await setDoc(doc(db, "users", uid), { firstName, lastName });
         console.log("User data saved successfully.");
       } catch (error) {
         console.error("Error saving user data:", error);
+      }
+    }
+
+    window.saveProgress = function() {
+      const tasks = {};
+      for (const section in lessonsData) {
+        for (let i = 1; i <= lessonsData[section]; i++) {
+          const key = `${section}-${i}`;
+          tasks[key] = {
+            started: document.getElementById(`started-${key}`).checked,
+            completed: document.getElementById(`completed-${key}`).checked,
+            checked: document.getElementById(`checked-${key}`).checked,
+            mastered: document.getElementById(`mastered-${key}`).checked
+          };
+        }
+      }
+      const user = auth.currentUser;
+      if (user) {
+        saveTaskProgress(user.uid, tasks);
+        alert("Progress saved!");
+      } else {
+        alert("Please log in to save progress.");
       }
     }
 
@@ -291,36 +250,6 @@
         console.log("Task progress saved successfully.");
       } catch (error) {
         console.error("Error saving task progress:", error);
-      }
-    }
-
-    window.saveProgress = function() {
-      const tasks = {
-        "5.1 Lesson One": {
-          started: document.getElementById('started-1').checked,
-          completed: document.getElementById('completed-1').checked,
-          checked: document.getElementById('checked-1').checked,
-          mastered: document.getElementById('mastered-1').checked
-        },
-        "5.1 Lesson Two": {
-          started: document.getElementById('started-2').checked,
-          completed: document.getElementById('completed-2').checked,
-          checked: document.getElementById('checked-2').checked,
-          mastered: document.getElementById('mastered-2').checked
-        },
-        "5.1 Lesson Three": {
-          started: document.getElementById('started-3').checked,
-          completed: document.getElementById('completed-3').checked,
-          checked: document.getElementById('checked-3').checked,
-          mastered: document.getElementById('mastered-3').checked
-        }
-      };
-      const user = auth.currentUser;
-      if (user) {
-        saveTaskProgress(user.uid, tasks);
-        alert("Progress saved!");
-      } else {
-        alert("Please log in to save progress.");
       }
     }
   </script>
