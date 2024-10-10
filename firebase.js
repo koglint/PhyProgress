@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs
-import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -25,4 +25,3 @@ export function register(email, password) {
 export function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
 }
-
