@@ -281,8 +281,8 @@ async function loadTaskProgress(uid) {
 
     window.saveProgress = function() {
       const tasks = {};
-      for (const section in lessonsData) {
-        for (let i = 1; i <= lessonsData[section]; i++) {
+      for (const section in lessonData) {
+        for (let i = 1; i <= lessonData[section]; i++) {
           const key = `${section}-${i}`;
           tasks[key] = {
             started: document.getElementById(`started-${key}`).checked,
