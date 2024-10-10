@@ -170,7 +170,8 @@ function generateChecklist() {
 }
 
 
-    function updateTaskColor(key) {
+// Function to update task color based on checked checkboxes
+function updateTaskColor(key) {
   const taskDiv = document.getElementById(`task-${key}`);
   if (!taskDiv) return;
 
@@ -198,6 +199,10 @@ function generateChecklist() {
     taskDiv.classList.add('red');
   }
 }
+
+// Attach to window for global access
+window.updateTaskColor = updateTaskColor;
+
 
     
 
