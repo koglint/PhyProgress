@@ -34,12 +34,12 @@
 
       register(email, password)
         .then(userCredential => {
-          alert("Registration successful!");
+          alert("Registration successful! Welcome " + email);
           console.log("User registered:", userCredential.user);
         })
         .catch(error => {
           console.error("Error registering:", error);
-          alert(error.message);
+          alert("Registration failed: " + error.message);
         });
     }
 
@@ -50,15 +50,14 @@
 
       login(email, password)
         .then(userCredential => {
-          alert("Login successful!");
+          alert("Login successful! Welcome back, " + email);
           console.log("User logged in:", userCredential.user);
         })
         .catch(error => {
           console.error("Error logging in:", error);
-          alert(error.message);
+          alert("Login failed: " + error.message);
         });
     }
   </script>
 </body>
 </html>
-
