@@ -64,15 +64,48 @@ export async function loadUserData(uid) {
   }
 }
 
+// Save task progress for lessons to Firestore
+export async function saveTaskProgress(uid, tasks) {
+  try {
+    await setDoc(doc(db, "tasks", uid), { tasks });
+    console.log("Task progress saved successfully.");
+  } catch (error) {
+    console.error("Error saving task progress:", error);
+  }
+}
+
+// Load task progress for lessons from Firestore
+export async function loadTaskProgress(uid) {
+  try {
+    const docRef = doc(db, "tasks", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const tasks = docSnap.data().tasks;
+      for (const [lesson, progress] of Object.entries(tasks)) {
+        for (const [status, checked] of Object.entries(progress)) {
+          const checkboxId = `${status}-${lesson.split(" ")[2]}`;
+          const checkbox = document.getElementById(checkboxId);
+          if (checkbox) {
+            checkbox.checked = checked;
+          }
+        }
+      }
+      console.log("Task progress loaded successfully.");
+    } else {
+      console.log("No task progress found for this user.");
+    }
+  } catch (error) {
+    console.error("Error loading task progress:", error);
+  }
+}
+
 // Initialize an auth listener to persist the user's session and handle state changes
 export function initAuthListener(callback) {
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // User is logged in, execute callback with user data
-      callback(user);
+      callback(user);  // User is logged in, execute callback with user data
     } else {
-      // User is logged out, execute callback with null
-      callback(null);
+      callback(null);  // User is logged out, execute callback with null
     }
   });
 }
