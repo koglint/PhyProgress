@@ -40,8 +40,9 @@ html, body {
 }
 
 .checkbox-container {
-  display: block; /* Ensure checkboxes are displayed vertically */
-  margin-left: 10px; /* Space between button and checkboxes */
+  display: flex;
+  flex-direction: column; /* Stack checkboxes vertically */
+  margin-left: 10px;
 }
 
 .link-button {
