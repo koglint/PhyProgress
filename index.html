@@ -110,11 +110,11 @@ function generateChecklist() {
 
       const checkboxContainer = `
         <div class="checkbox-container">
-          <label for="started-${lessonKey}">${section} Lesson ${i}: ${lessonName}</label> <br>
-          <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Started <br>
-          <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Completed <br>
-          <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Checked <br>
-          <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Mastered <br>
+          <label for="started-${lessonKey}">${section} Lesson ${i}: ${lessonName}</label>
+          <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Started
+          <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Completed
+          <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Marked (Using Solutions)
+          <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Mastered (Re-Completed with No Errors)
         </div>
       `;
 
