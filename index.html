@@ -105,31 +105,65 @@
 
 
     
-    const lessonsData = {
-      '5.1': 7,
-      '5.2': 6,
-      '6.1': 5,
-      // Expand as needed with format 'section': number_of_lessons
-    };
+const lessonsData = {
+  '5.1': 7,
+  '5.2': 6,
+  '6.1': 5,
+  // Expand as needed
+};
 
-    function generateChecklist() {
-      taskChecklist.innerHTML = '';
-      for (const [section, lessonCount] of Object.entries(lessonsData)) {
-        for (let i = 1; i <= lessonCount; i++) {
-          const taskDiv = document.createElement('div');
-          taskDiv.className = 'task';
-          taskDiv.innerHTML = `
-            <label for="started-${section}-${i}">${section} Lesson ${i}:</label> <br>
-            <input type="checkbox" id="started-${section}-${i}"> Started <br>
-            <input type="checkbox" id="completed-${section}-${i}"> Completed <br>
-            <input type="checkbox" id="checked-${section}-${i}"> Checked <br>
-            <input type="checkbox" id="mastered-${section}-${i}"> Mastered <br>
-          `;
-          taskChecklist.appendChild(taskDiv);
-        }
-      }
-      taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
+const lessonNames = {
+  '5.1': [
+    'Projectile Motion Basics',
+    'Advanced Projectile Calculations',
+    'Real-life Applications',
+    'Energy Conservation',
+    'Angle and Range',
+    'Effect of Gravity',
+    'Practice Problems'
+  ],
+  '5.2': [
+    'Introduction to Waves',
+    'Wave Properties',
+    'Transverse vs Longitudinal Waves',
+    'Wave Interference',
+    'Standing Waves',
+    'Practical Wave Applications'
+  ],
+  '6.1': [
+    'Electric Fields Basics',
+    'Field Strength Calculations',
+    'Equipotential Lines',
+    'Electric Potential',
+    'Applications of Electric Fields'
+  ]
+  // Add more sections as needed
+};
+
+function generateChecklist() {
+  taskChecklist.innerHTML = '';
+  for (const [section, lessonCount] of Object.entries(lessonsData)) {
+    for (let i = 1; i <= lessonCount; i++) {
+      // Use the lesson name if available, otherwise default to "Physics Lesson"
+      const lessonName = lessonNames[section] && lessonNames[section][i - 1]
+        ? lessonNames[section][i - 1]
+        : `Physics Lesson`; // Fallback to a generic name
+
+      const taskDiv = document.createElement('div');
+      taskDiv.className = 'task';
+      taskDiv.innerHTML = `
+        <label for="started-${section}-${i}">${section} Lesson ${i}: ${lessonName}</label> <br>
+        <input type="checkbox" id="started-${section}-${i}"> Started <br>
+        <input type="checkbox" id="completed-${section}-${i}"> Completed <br>
+        <input type="checkbox" id="checked-${section}-${i}"> Checked <br>
+        <input type="checkbox" id="mastered-${section}-${i}"> Mastered <br>
+      `;
+      taskChecklist.appendChild(taskDiv);
     }
+  }
+  taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
+}
+
 
     async function loadTaskProgress(uid) {
       try {
