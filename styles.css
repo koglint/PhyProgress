@@ -41,9 +41,20 @@ html, body {
 
 .checkbox-container {
   display: flex;
-  flex-direction: column; /* Stack checkboxes vertically */
+  flex-direction: column;
   margin-left: 10px;
 }
+
+.checkbox-item {
+  display: flex;
+  align-items: center; /* Align checkbox and text vertically */
+  margin-bottom: 5px; /* Space between each checkbox row */
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin-right: 8px; /* Space between checkbox and label */
+}
+
 
 .link-button {
   width: 30px;
