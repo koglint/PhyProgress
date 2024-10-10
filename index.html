@@ -58,32 +58,33 @@
     </div>
   </details>
 
-  <!-- Checklist Section for Lesson Progress -->
-  <section id="taskChecklist" style="display:none;">
-    <h2>Lesson Checklist</h2>
-    <div class="task" id="task-1">
-      <label>5.1 Lesson One:</label>
-      <input type="checkbox" id="started-1"> Started
-      <input type="checkbox" id="completed-1"> Completed
-      <input type="checkbox" id="checked-1"> Checked
-      <input type="checkbox" id="mastered-1"> Mastered
-    </div>
-    <div class="task" id="task-2">
-      <label>5.1 Lesson Two:</label>
-      <input type="checkbox" id="started-2"> Started
-      <input type="checkbox" id="completed-2"> Completed
-      <input type="checkbox" id="checked-2"> Checked
-      <input type="checkbox" id="mastered-2"> Mastered
-    </div>
-    <div class="task" id="task-3">
-      <label>5.1 Lesson Three:</label>
-      <input type="checkbox" id="started-3"> Started
-      <input type="checkbox" id="completed-3"> Completed
-      <input type="checkbox" id="checked-3"> Checked
-      <input type="checkbox" id="mastered-3"> Mastered
-    </div>
-    <button onclick="saveProgress()">Save Progress</button>
-  </section>
+<!-- Checklist Section for Lesson Progress -->
+<section id="taskChecklist" style="display:none;">
+  <h2>Lesson Checklist</h2>
+  <div class="task">
+    <label for="started-1">5.1 Lesson One:</label>
+    <input type="checkbox" id="started-1"> Started
+    <input type="checkbox" id="completed-1"> Completed
+    <input type="checkbox" id="checked-1"> Checked
+    <input type="checkbox" id="mastered-1"> Mastered
+  </div>
+  <div class="task">
+    <label for="started-2">5.1 Lesson Two:</label>
+    <input type="checkbox" id="started-2"> Started
+    <input type="checkbox" id="completed-2"> Completed
+    <input type="checkbox" id="checked-2"> Checked
+    <input type="checkbox" id="mastered-2"> Mastered
+  </div>
+  <div class="task">
+    <label for="started-3">5.1 Lesson Three:</label>
+    <input type="checkbox" id="started-3"> Started
+    <input type="checkbox" id="completed-3"> Completed
+    <input type="checkbox" id="checked-3"> Checked
+    <input type="checkbox" id="mastered-3"> Mastered
+  </div>
+  <button onclick="saveProgress()">Save Progress</button>
+</section>
+
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
@@ -218,14 +219,12 @@ async function loadTaskProgress(uid) {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const tasks = docSnap.data().tasks;
+      // Explicitly check each checkbox by direct reference
       for (const [lesson, progress] of Object.entries(tasks)) {
-        for (const [status, checked] of Object.entries(progress)) {
-          const checkboxId = `${status}-${lesson.split(" ")[2]}`;
-          const checkbox = document.getElementById(checkboxId);
-          if (checkbox) {
-            checkbox.checked = (checked === true || checked === "true"); // Ensure boolean conversion
-          }
-        }
+        document.getElementById(`started-${lesson.split(" ")[2]}`).checked = Boolean(progress.started);
+        document.getElementById(`completed-${lesson.split(" ")[2]}`).checked = Boolean(progress.completed);
+        document.getElementById(`checked-${lesson.split(" ")[2]}`).checked = Boolean(progress.checked);
+        document.getElementById(`mastered-${lesson.split(" ")[2]}`).checked = Boolean(progress.mastered);
       }
       console.log("Task progress loaded successfully.");
     } else {
@@ -235,6 +234,7 @@ async function loadTaskProgress(uid) {
     console.error("Error loading task progress:", error);
   }
 }
+
 
 
     // Initialize an auth listener to persist the user's session and handle state changes
