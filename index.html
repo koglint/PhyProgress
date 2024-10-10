@@ -119,11 +119,11 @@
           const taskDiv = document.createElement('div');
           taskDiv.className = 'task';
           taskDiv.innerHTML = `
-            <label for="started-${section}-${i}">${section} Lesson ${i}:</label>
-            <input type="checkbox" id="started-${section}-${i}"> Started
-            <input type="checkbox" id="completed-${section}-${i}"> Completed
-            <input type="checkbox" id="checked-${section}-${i}"> Checked
-            <input type="checkbox" id="mastered-${section}-${i}"> Mastered
+            <label for="started-${section}-${i}">${section} Lesson ${i}:</label> <br>
+            <input type="checkbox" id="started-${section}-${i}"> Started <br>
+            <input type="checkbox" id="completed-${section}-${i}"> Completed <br>
+            <input type="checkbox" id="checked-${section}-${i}"> Checked <br>
+            <input type="checkbox" id="mastered-${section}-${i}"> Mastered <br>
           `;
           taskChecklist.appendChild(taskDiv);
         }
