@@ -1,5 +1,5 @@
 // lessonLinks.js
-export const lessonsData = {
+export const lessonData = {
   '5.1': 3,
   '5.2': 6,
   '5.3': 6,
