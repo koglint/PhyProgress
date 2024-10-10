@@ -115,23 +115,7 @@
     const logoutButton = document.getElementById('logoutButton');
     const taskChecklist = document.getElementById('taskChecklist');
 
-    function updateStatus(isLoggedIn, userData = null) {
-      const statusIcon = document.getElementById('statusIcon');
-      
-      if (isLoggedIn && userData) {
-        const fullName = `${userData.firstName} ${userData.lastName}`;
-        statusIcon.textContent = `Logged in as: ${fullName}`;
-      } else {
-        statusIcon.textContent = "Logged Out";
-      }
-      
-      logoutButton.style.display = isLoggedIn ? "block" : "none";
-      taskChecklist.style.display = isLoggedIn ? "block" : "none";
-      
-      if (isLoggedIn && userData) {
-        alert(`Welcome back, ${userData.firstName}`);
-      }
-    }
+
 
 
     // Register function
@@ -255,23 +239,37 @@ async function loadTaskProgress(uid) {
 }
 
 
-
-
     // Initialize an auth listener to persist the user's session and handle state changes
-    function initAuthListener() {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          loadUserData(user.uid).then(userData => {
-            updateStatus(true, userData);
-            loadTaskProgress(user.uid); // Load task progress when the user is logged in
-          });
+function initAuthListener() {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      loadUserData(user.uid).then(userData => {
+        if (userData) {
+          updateStatus(true, userData);
         } else {
-          updateStatus(false);
+          updateStatus(true, { firstName: "User", lastName: "" }); // Default if userData isn't found
         }
+        loadTaskProgress(user.uid); // Load task progress when the user is logged in
       });
+    } else {
+      updateStatus(false);
     }
-    
-    initAuthListener();
+  });
+}
+
+function updateStatus(isLoggedIn, userData = null) {
+  if (isLoggedIn && userData) {
+    const fullName = `${userData.firstName} ${userData.lastName}`;
+    statusIcon.textContent = `Logged in as: ${fullName}`;
+  } else {
+    statusIcon.textContent = "Logged Out";
+  }
+
+  logoutButton.style.display = isLoggedIn ? "block" : "none";
+  taskChecklist.style.display = isLoggedIn ? "block" : "none";
+}
+
+
 
     // Save progress handler
     window.saveProgress = function() {
