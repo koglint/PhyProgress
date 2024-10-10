@@ -246,6 +246,19 @@
     }
   }
 
+
+  // Save task progress for lessons to Firestore
+async function saveTaskProgress(uid, tasks) {
+  try {
+    await setDoc(doc(db, "tasks", uid), { tasks });
+    console.log("Task progress saved successfully.");
+  } catch (error) {
+    console.error("Error saving task progress:", error);
+  }
+}
+
+
+  
   window.saveProgress = function() {
     const tasks = {
       "5.1 Lesson One": {
