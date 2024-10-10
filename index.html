@@ -108,21 +108,24 @@ function generateChecklist() {
         </button>
       `;
 
-      taskDiv.innerHTML = `
-        ${linkButton}
-        <label for="started-${lessonKey}">${section} Lesson ${i}: ${lessonName}</label> <br>
-        <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Started <br>
-        <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Completed <br>
-        <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Checked <br>
-        <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Mastered <br>
+      const checkboxContainer = `
+        <div class="checkbox-container">
+          <label for="started-${lessonKey}">${section} Lesson ${i}: ${lessonName}</label> <br>
+          <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Started <br>
+          <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Completed <br>
+          <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Checked <br>
+          <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Mastered <br>
+        </div>
       `;
 
+      taskDiv.innerHTML = linkButton + checkboxContainer;
       taskChecklist.appendChild(taskDiv);
       updateTaskColor(lessonKey); // Initial color update
     }
   }
   taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 
 
