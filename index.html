@@ -43,7 +43,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-    import { lessonLinks } from './lessonLinks.js';
+    import { lessonLinks, lessonData, lessonNames } from './lessonLinks.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
@@ -87,37 +87,7 @@
 
 
     
-const lessonsData = {
-  '5.1': 3,
-  '5.2': 6,
-  '5.3': 6,
-  // Expand as needed
-};
 
-const lessonNames = {
-  '5.1': [
-    'Projectile Motion',
-    'Projectile Motion Relationships',
-    'Projectile Motion Practical'
-  ],
-  '5.2': [
-    'Uniform Circular Motion',
-    'Centripetal Force Practical',
-    'Centripetal Force Scenarios',
-    'Circular Motion Equations',
-    'Work and Circular Motion',
-    'Torque'
-  ],
-  '5.3': [
-    'Universal Gravitation',
-    'Orbital Motion',
-    'Satellites',
-    'Keplers Laws',
-    'Escape Velocity',
-    'Energy of Satellites'
-  ]
-  // Add more sections as needed
-};
 
 function generateChecklist() {
   taskChecklist.innerHTML = '';
