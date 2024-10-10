@@ -43,6 +43,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { lessonLinks } from './lessonLinks.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
@@ -126,22 +127,33 @@ function generateChecklist() {
         ? lessonNames[section][i - 1]
         : `Physics Lesson`;
 
+      const lessonKey = `${section}-${i}`;
       const taskDiv = document.createElement('div');
       taskDiv.className = 'task';
-      taskDiv.id = `task-${section}-${i}`;
-      taskDiv.innerHTML = `
-        <label for="started-${section}-${i}">${section} Lesson ${i}: ${lessonName}</label> <br>
-        <input type="checkbox" id="started-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Started <br>
-        <input type="checkbox" id="completed-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Completed <br>
-        <input type="checkbox" id="checked-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Checked <br>
-        <input type="checkbox" id="mastered-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Mastered <br>
+      taskDiv.id = `task-${lessonKey}`;
+
+      const linkButton = `
+        <button class="link-button">
+          <a href="${lessonLinks[lessonKey] || '#'}" target="_blank">🔗</a>
+        </button>
       `;
+
+      taskDiv.innerHTML = `
+        ${linkButton}
+        <label for="started-${lessonKey}">${section} Lesson ${i}: ${lessonName}</label> <br>
+        <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Started <br>
+        <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Completed <br>
+        <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Checked <br>
+        <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Mastered <br>
+      `;
+
       taskChecklist.appendChild(taskDiv);
-      updateTaskColor(`${section}-${i}`); // Initial color update
+      updateTaskColor(lessonKey); // Initial color update
     }
   }
   taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 
 // Function to update task color based on checked checkboxes
