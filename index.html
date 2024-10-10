@@ -51,15 +51,30 @@
   </details>
 
   <script type="module">
-    import { register, login, logout, saveUserData, loadUserData } from './firebase.js';
+    import { register, login, logout, saveUserData, loadUserData, initAuthListener } from './firebase.js';
 
     const statusIcon = document.getElementById('statusIcon');
     const logoutButton = document.getElementById('logoutButton');
 
-    function updateStatus(isLoggedIn) {
+    // Update the status icon and toggle the logout button
+    function updateStatus(isLoggedIn, userData = null) {
       statusIcon.textContent = isLoggedIn ? "Logged In" : "Logged Out";
       logoutButton.style.display = isLoggedIn ? "block" : "none";
+      if (userData) {
+        alert(`Welcome back, ${userData.firstName}`);
+      }
     }
+
+    // Initialize auth listener to check if the user is logged in on page load
+    initAuthListener((user) => {
+      if (user) {
+        loadUserData(user.uid).then(userData => {
+          updateStatus(true, userData);
+        });
+      } else {
+        updateStatus(false);
+      }
+    });
 
     // Register function with Firestore data saving
     window.handleRegister = function() {
