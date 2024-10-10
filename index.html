@@ -211,30 +211,31 @@
       }
     }
 
-    // Load task progress for lessons from Firestore
-    async function loadTaskProgress(uid) {
-      try {
-        const docRef = doc(db, "tasks", uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const tasks = docSnap.data().tasks;
-          for (const [lesson, progress] of Object.entries(tasks)) {
-            for (const [status, checked] of Object.entries(progress)) {
-              const checkboxId = `${status}-${lesson.split(" ")[2]}`;
-              const checkbox = document.getElementById(checkboxId);
-              if (checkbox) {
-                checkbox.checked = checked; // Ensure checkbox state is updated based on stored data
-              }
-            }
+// Load task progress for lessons from Firestore
+async function loadTaskProgress(uid) {
+  try {
+    const docRef = doc(db, "tasks", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const tasks = docSnap.data().tasks;
+      for (const [lesson, progress] of Object.entries(tasks)) {
+        for (const [status, checked] of Object.entries(progress)) {
+          const checkboxId = `${status}-${lesson.split(" ")[2]}`;
+          const checkbox = document.getElementById(checkboxId);
+          if (checkbox) {
+            checkbox.checked = (checked === true || checked === "true"); // Ensure boolean conversion
           }
-          console.log("Task progress loaded successfully.");
-        } else {
-          console.log("No task progress found for this user.");
         }
-      } catch (error) {
-        console.error("Error loading task progress:", error);
       }
+      console.log("Task progress loaded successfully.");
+    } else {
+      console.log("No task progress found for this user.");
     }
+  } catch (error) {
+    console.error("Error loading task progress:", error);
+  }
+}
+
 
     // Initialize an auth listener to persist the user's session and handle state changes
     function initAuthListener() {
