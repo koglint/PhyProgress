@@ -1,6 +1,7 @@
 // Import the functions you need from the SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,6 +16,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const db = getFirestore(app);
 
 // Register function
 export function register(email, password) {
@@ -24,4 +26,34 @@ export function register(email, password) {
 // Login function
 export function login(email, password) {
   return signInWithEmailAndPassword(auth, email, password);
+}
+
+// Logout function
+export function logout() {
+  return signOut(auth);
+}
+
+// Save user data to Firestore
+export async function saveUserData(uid, firstName, lastName) {
+  try {
+    await setDoc(doc(db, "users", uid), {
+      firstName: firstName,
+      lastName: lastName
+    });
+    console.log("User data saved successfully.");
+  } catch (error) {
+    console.error("Error saving user data:", error);
+  }
+}
+
+// Load user data from Firestore
+export async function loadUserData(uid) {
+  try {
+    const docRef = doc(db, "users", uid);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : null;
+  } catch (error) {
+    console.error("Error loading user data:", error);
+    return null;
+  }
 }
