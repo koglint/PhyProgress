@@ -4,7 +4,7 @@ import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } f
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyD346cKjY_UadNJqGW2Ndmk3LZ2RVr2HIU",
+  apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
   authDomain: "koglinsphysicsclass.firebaseapp.com",
   projectId: "koglinsphysicsclass",
   storageBucket: "koglinsphysicsclass.appspot.com",
