@@ -76,6 +76,20 @@ html, body {
   height: 100%;
 }
 
+.save-progress-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #4CAF50; /* Green */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  z-index: 1000; /* Ensures the button stays on top */
+}
+
+
 .red { background-color: #ffcccc; }
 .orange { background-color: #ffebcc; }
 .yellow { background-color: #fffacc; }
