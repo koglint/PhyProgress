@@ -110,11 +110,23 @@ function generateChecklist() {
 
       const checkboxContainer = `
         <div class="checkbox-container">
-          <label for="started-${lessonKey}">${section} Lesson ${i}: ${lessonName}</label>
-          <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Started
-          <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Completed
-          <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Marked (Using Solutions)
-          <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')"> Mastered (Re-Completed with No Errors)
+          <label>${section} Lesson ${i}: ${lessonName}</label>
+          <div class="checkbox-item">
+            <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <label for="started-${lessonKey}">Started</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <label for="completed-${lessonKey}">Completed</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <label for="checked-${lessonKey}">Marked (Using Solutions)</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <label for="mastered-${lessonKey}">Mastered (Re-Completed with No Errors)</label>
+          </div>
         </div>
       `;
 
@@ -125,6 +137,7 @@ function generateChecklist() {
   }
   taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 
 
