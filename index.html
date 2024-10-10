@@ -86,6 +86,25 @@
     const logoutButton = document.getElementById('logoutButton');
     const taskChecklist = document.getElementById('taskChecklist');
 
+    async function loadUserData(uid) {
+      try {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          console.log("User data loaded:", docSnap.data());
+          return docSnap.data();
+        } else {
+          console.log("No user data found.");
+          return null;
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+        return null;
+      }
+    }
+
+
+    
     const lessonsData = {
       '5.1': 7,
       '5.2': 6,
