@@ -144,14 +144,24 @@
           console.log("Task progress loaded:", tasks);
           for (const [lesson, progress] of Object.entries(tasks)) {
             const lessonNum = lesson.split(" ")[2];
+            console.log(`Processing lesson number: ${lessonNum}`);
+
             const startedCheckbox = document.getElementById(`started-${lessonNum}`);
             if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
+              console.log(`started-${lessonNum} set to ${startedCheckbox.checked}`);
+
             const completedCheckbox = document.getElementById(`completed-${lessonNum}`);
             if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
+              console.log(`completed-${lessonNum} set to ${completedCheckbox.checked}`);
+
             const checkedCheckbox = document.getElementById(`checked-${lessonNum}`);
             if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
+              console.log(`checked-${lessonNum} set to ${checkedCheckbox.checked}`);
+
             const masteredCheckbox = document.getElementById(`mastered-${lessonNum}`);
             if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
+              console.log(`mastered-${lessonNum} set to ${masteredCheckbox.checked}`);
+
           }
           console.log("Checkboxes updated to reflect task progress.");
         } else {
