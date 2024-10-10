@@ -116,13 +116,23 @@
     const taskChecklist = document.getElementById('taskChecklist');
 
     function updateStatus(isLoggedIn, userData = null) {
-      statusIcon.textContent = isLoggedIn ? "Logged In" : "Logged Out";
+      const statusIcon = document.getElementById('statusIcon');
+      
+      if (isLoggedIn && userData) {
+        const fullName = `${userData.firstName} ${userData.lastName}`;
+        statusIcon.textContent = `Logged in as: ${fullName}`;
+      } else {
+        statusIcon.textContent = "Logged Out";
+      }
+      
       logoutButton.style.display = isLoggedIn ? "block" : "none";
       taskChecklist.style.display = isLoggedIn ? "block" : "none";
-      if (userData) {
+      
+      if (isLoggedIn && userData) {
         alert(`Welcome back, ${userData.firstName}`);
       }
     }
+
 
     // Register function
     window.handleRegister = function() {
