@@ -181,31 +181,37 @@ window.updateTaskColor = updateTaskColor;
     
 
 
-    async function loadTaskProgress(uid) {
-      try {
-        const docRef = doc(db, "tasks", uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const tasks = docSnap.data().tasks;
-          for (const [key, progress] of Object.entries(tasks)) {
-            const startedCheckbox = document.getElementById(`started-${key}`);
-            const completedCheckbox = document.getElementById(`completed-${key}`);
-            const checkedCheckbox = document.getElementById(`checked-${key}`);
-            const masteredCheckbox = document.getElementById(`mastered-${key}`);
+async function loadTaskProgress(uid) {
+  try {
+    const docRef = doc(db, "tasks", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const tasks = docSnap.data().tasks;
+      for (const [key, progress] of Object.entries(tasks)) {
+        const startedCheckbox = document.getElementById(`started-${key}`);
+        const completedCheckbox = document.getElementById(`completed-${key}`);
+        const checkedCheckbox = document.getElementById(`checked-${key}`);
+        const masteredCheckbox = document.getElementById(`mastered-${key}`);
 
-            if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
-            if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
-            if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
-            if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
-          }
-          console.log("Checkboxes updated to reflect task progress.");
-        } else {
-          console.log("No task progress found for this user.");
-        }
-      } catch (error) {
-        console.error("Error loading task progress:", error);
+        if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
+        if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
+        if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
+        if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
+
+        // Update the color based on the loaded checkbox states
+        updateTaskColor(key);
       }
+      console.log("Checkboxes updated to reflect task progress.");
+    } else {
+      console.log("No task progress found for this user.");
     }
+  } catch (error) {
+    console.error("Error loading task progress:", error);
+  }
+}
+
+
+    
 
     function updateStatus(isLoggedIn, userData = null) {
       if (isLoggedIn && userData) {
