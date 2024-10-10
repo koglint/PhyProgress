@@ -24,6 +24,13 @@
     .task {
       margin-bottom: 10px;
     }
+
+  .red { background-color: #ffcccc; }
+  .orange { background-color: #ffebcc; }
+  .yellow { background-color: #fffacc; }
+  .green { background-color: #ccffcc; }
+
+    
   </style>
 </head>
 <body>
@@ -141,25 +148,58 @@ function generateChecklist() {
   taskChecklist.innerHTML = '';
   for (const [section, lessonCount] of Object.entries(lessonsData)) {
     for (let i = 1; i <= lessonCount; i++) {
-      // Use the lesson name if available, otherwise default to "Physics Lesson"
       const lessonName = lessonNames[section] && lessonNames[section][i - 1]
         ? lessonNames[section][i - 1]
-        : `Physics Lesson`; // Fallback to a generic name
+        : `Physics Lesson`;
 
       const taskDiv = document.createElement('div');
       taskDiv.className = 'task';
+      taskDiv.id = `task-${section}-${i}`;
       taskDiv.innerHTML = `
         <label for="started-${section}-${i}">${section} Lesson ${i}: ${lessonName}</label> <br>
-        <input type="checkbox" id="started-${section}-${i}"> Started <br>
-        <input type="checkbox" id="completed-${section}-${i}"> Completed <br>
-        <input type="checkbox" id="checked-${section}-${i}"> Checked <br>
-        <input type="checkbox" id="mastered-${section}-${i}"> Mastered <br>
+        <input type="checkbox" id="started-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Started <br>
+        <input type="checkbox" id="completed-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Completed <br>
+        <input type="checkbox" id="checked-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Checked <br>
+        <input type="checkbox" id="mastered-${section}-${i}" onclick="updateTaskColor('${section}-${i}')"> Mastered <br>
       `;
       taskChecklist.appendChild(taskDiv);
+      updateTaskColor(`${section}-${i}`); // Initial color update
     }
   }
   taskChecklist.innerHTML += `<button onclick="saveProgress()">Save Progress</button>`;
 }
+
+
+    function updateTaskColor(key) {
+  const taskDiv = document.getElementById(`task-${key}`);
+  if (!taskDiv) return;
+
+  const checkboxes = [
+    document.getElementById(`started-${key}`),
+    document.getElementById(`completed-${key}`),
+    document.getElementById(`checked-${key}`),
+    document.getElementById(`mastered-${key}`)
+  ];
+
+  // Count checked boxes
+  const checkedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+
+  // Remove all color classes
+  taskDiv.classList.remove('red', 'orange', 'yellow', 'green');
+
+  // Apply the color based on the count
+  if (checkedCount === 4) {
+    taskDiv.classList.add('green');
+  } else if (checkedCount === 3) {
+    taskDiv.classList.add('yellow');
+  } else if (checkedCount === 2) {
+    taskDiv.classList.add('orange');
+  } else {
+    taskDiv.classList.add('red');
+  }
+}
+
+    
 
 
     async function loadTaskProgress(uid) {
