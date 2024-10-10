@@ -1,1 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login/Register</title>
+</head>
+<body>
+  <h1>Student Login</h1>
+
+  <!-- Register Form -->
+  <div id="registerForm">
+    <h2>Register</h2>
+    <input type="email" id="registerEmail" placeholder="Email" required>
+    <input type="password" id="registerPassword" placeholder="Password" required>
+    <button onclick="handleRegister()">Register</button>
+  </div>
+
+  <!-- Login Form -->
+  <div id="loginForm">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button onclick="handleLogin()">Login</button>
+  </div>
+
+  <script type="module">
+    import { register, login } from './firebase.js';
+
+    // Handle registration
+    function handleRegister() {
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+
+      register(email, password)
+        .then(userCredential => {
+          alert("Registration successful!");
+          console.log("User registered:", userCredential.user);
+        })
+        .catch(error => {
+          console.error("Error registering:", error);
+          alert(error.message);
+        });
+    }
+
+    // Handle login
+    function handleLogin() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      login(email, password)
+        .then(userCredential => {
+          alert("Login successful!");
+          console.log("User logged in:", userCredential.user);
+        })
+        .catch(error => {
+          console.error("Error logging in:", error);
+          alert(error.message);
+        });
+    }
+  </script>
+</body>
+</html>
 
