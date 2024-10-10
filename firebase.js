@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
 // Your web app's Firebase configuration
@@ -17,6 +17,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore(app);
+
+// Set persistence to local to ensure session persists across page reloads
+setPersistence(auth, browserLocalPersistence)
+  .catch((error) => {
+    console.error("Error setting persistence:", error);
+  });
 
 // Register function
 export function register(email, password) {
@@ -56,4 +62,17 @@ export async function loadUserData(uid) {
     console.error("Error loading user data:", error);
     return null;
   }
+}
+
+// Initialize an auth listener to persist the user's session and handle state changes
+export function initAuthListener(callback) {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      // User is logged in, execute callback with user data
+      callback(user);
+    } else {
+      // User is logged out, execute callback with null
+      callback(null);
+    }
+  });
 }
