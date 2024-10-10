@@ -34,6 +34,7 @@ html, body {
 
 .task {
   margin-bottom: 10px;
+  border-radius: 8px;
 }
 
 .red { background-color: #ffcccc; }
