@@ -239,18 +239,17 @@ async function loadTaskProgress(uid) {
 }
 
 
-    // Initialize an auth listener to persist the user's session and handle state changes
+   // Initialize an auth listener to persist the user's session and handle state changes
 function initAuthListener() {
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
-      loadUserData(user.uid).then(userData => {
-        if (userData) {
-          updateStatus(true, userData);
-        } else {
-          updateStatus(true, { firstName: "User", lastName: "" }); // Default if userData isn't found
-        }
+      const userData = await loadUserData(user.uid);
+      if (userData) {
+        updateStatus(true, userData);
         loadTaskProgress(user.uid); // Load task progress when the user is logged in
-      });
+      } else {
+        console.error("User data not found.");
+      }
     } else {
       updateStatus(false);
     }
@@ -264,10 +263,14 @@ function updateStatus(isLoggedIn, userData = null) {
   } else {
     statusIcon.textContent = "Logged Out";
   }
-
+  
   logoutButton.style.display = isLoggedIn ? "block" : "none";
   taskChecklist.style.display = isLoggedIn ? "block" : "none";
 }
+
+// Register the auth listener when the page loads
+initAuthListener();
+
 
 
 
