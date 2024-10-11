@@ -76,32 +76,29 @@
 
 
 
-    
-        // Show login modal, hide register modal
-function toggleAuthModal() {
-  const loginModal = document.getElementById('loginModal');
-  const registerModal = document.getElementById('registerModal');
-  loginModal.style.display = loginModal.style.display === 'none' ? 'block' : 'none';
-  registerModal.style.display = 'none';
-}
+      // Attach modal toggle functions to the window object
+  window.toggleAuthModal = function() {
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    loginModal.style.display = loginModal.style.display === 'none' ? 'block' : 'none';
+    registerModal.style.display = 'none';
+  }
 
-// Show register modal, hide login modal
-function toggleRegisterModal() {
-  document.getElementById('loginModal').style.display = 'none';
-  document.getElementById('registerModal').style.display = 'block';
-}
+  window.toggleRegisterModal = function() {
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('registerModal').style.display = 'block';
+  }
 
-  window.onload = function() {
-  const authToggleButton = document.getElementById('authToggleButton');
-  
-  authToggleButton.addEventListener('click', () => {
+  // Attach the click event to authToggleButton
+  document.getElementById('authToggleButton').addEventListener('click', () => {
+    const authToggleButton = document.getElementById('authToggleButton');
     if (authToggleButton.textContent === 'Logout') {
       handleLogout();
     } else {
       toggleAuthModal();
     }
   });
-};
+    
 
 
     
