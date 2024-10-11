@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login/Register</title>
+  <title> Koglin Physics </title>
   <link rel="stylesheet" href="styles.css">
 
 </head>
@@ -275,7 +275,7 @@ function updateStatus(isLoggedIn, userData = null) {
     loginModal.style.display = 'none';
     registerModal.style.display = 'none';
     taskChecklist.style.display = 'block';
-    statusIcon.textContent = `Logged in as: ${userData.firstName} ${userData.lastName}`; // Update with user name
+    statusIcon.textContent = `${userData.firstName}`; // Update with user name
   } else {
     authToggleButton.textContent = 'Login';
     taskChecklist.style.display = 'none';
