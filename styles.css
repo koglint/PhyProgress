@@ -105,6 +105,12 @@ h1 {
   z-index: 1000; /* Ensures the button stays on top */
 }
 
+.legend {
+  background-color: #555050;
+  color: white;
+  margin: 10px;
+  padding: 10px;
+}
 /* Style for the toggle button */
 #authToggleButton {
   position: absolute;
