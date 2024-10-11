@@ -48,7 +48,7 @@ h1 {
 
 .task {
   display: flex;
-  align-items: flex-start; /* Align items to the top */
+  align-items: center; /* Align items to the center */
   padding: 10px;
   border-radius: 8px;
 }
@@ -69,8 +69,8 @@ h1 {
   margin-right: 8px; /* Space between checkbox and label */
 }
 
-
 .link-button {
+  align-self: center; /* Center the link button vertically within the task div */
   width: 30px;
   height: 30px;
   background-color: #888;
@@ -81,6 +81,7 @@ h1 {
   text-align: center;
   line-height: 30px; /* Centers text vertically */
 }
+
 
 .link-button a {
   color: inherit;
@@ -103,8 +104,8 @@ h1 {
   z-index: 1000; /* Ensures the button stays on top */
 }
 
-.colourNone { background-color: #C9C1C1; } /* Steampunk Grey*/
-.colourOne { background-color: #CD853F; } /* Peru Bronze*/
-.colourTwo { background-color: #CECECE; } /* Platinum Silver*/
-.colourThree { background-color: #FFD700; } /* Gold */
-.colourFour { background-color: #9AFEFF; } /* Electric Blue*/
+.colourNone { background-color: #aec6cf; }
+.colourOne { background-color: #ff6961; }
+.colourTwo { background-color: #ffb347; }
+.colourThree { background-color: #fdfd96; }
+.colourFour { background-color: #77d77; }
