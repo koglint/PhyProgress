@@ -268,18 +268,26 @@ function updateStatus(isLoggedIn, userData = null) {
   const authToggleButton = document.getElementById('authToggleButton');
   const loginModal = document.getElementById('loginModal');
   const registerModal = document.getElementById('registerModal');
+  const statusIcon = document.getElementById('statusIcon'); // Ensure this element is referenced here
   
-  if (isLoggedIn) {
+  if (isLoggedIn && userData) {
     authToggleButton.textContent = 'Logout';
     loginModal.style.display = 'none';
     registerModal.style.display = 'none';
     taskChecklist.style.display = 'block';
+    statusIcon.textContent = `Logged in as: ${userData.firstName} ${userData.lastName}`; // Update with user name
   } else {
     authToggleButton.textContent = 'Login';
     taskChecklist.style.display = 'none';
+    statusIcon.textContent = 'Logged Out'; // Set status to 'Logged Out'
   }
 }
 
+
+
+
+
+    
 document.getElementById('authToggleButton').addEventListener('click', () => {
   if (authToggleButton.textContent === 'Logout') {
     handleLogout();
