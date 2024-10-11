@@ -48,6 +48,7 @@ h1 {
 
 .task {
   display: flex;
+  justify-content: space-between; /* Space items across the width */
   align-items: center; /* Align items to the center */
   padding: 10px;
   border-radius: 8px;
