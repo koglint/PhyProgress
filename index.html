@@ -179,13 +179,18 @@ function renderProgressChart() {
   const ctx = document.getElementById('progressChart').getContext('2d');
 
   if (window.progressChart) {
-    // Update existing chart
-    window.progressChart.data.labels = moduleNames;
-    window.progressChart.data.datasets[0].data = completedData;
-    window.progressChart.data.datasets[1].data = masteredData;
-    window.progressChart.update();
+    // Ensure `window.progressChart` and its properties are properly defined before updating
+    if (window.progressChart.data && window.progressChart.data.datasets) {
+      // Update the existing chart with new data
+      window.progressChart.data.labels = moduleNames;
+      window.progressChart.data.datasets[0].data = completedData;
+      window.progressChart.data.datasets[1].data = masteredData;
+      window.progressChart.update();
+    } else {
+      console.error("Chart data structure is not as expected.");
+    }
   } else {
-    // Create a new chart
+    // Initialize a new chart if it does not exist
     window.progressChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -219,6 +224,7 @@ function renderProgressChart() {
     });
   }
 }
+
 
 
 
