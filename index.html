@@ -151,7 +151,6 @@
     
 
 
-// Create a function to calculate progress and render the chart
 function renderProgressChart() {
   const moduleNames = Object.keys(lessonData);
   const completedData = [];
@@ -177,9 +176,15 @@ function renderProgressChart() {
     masteredData.push((masteredCount / lessonCount) * 100);
   });
 
-  // Render or update the Chart.js chart
   const ctx = document.getElementById('progressChart').getContext('2d');
-  if (!window.progressChart) {
+
+  if (window.progressChart) {
+    // Update existing chart
+    window.progressChart.data.labels = moduleNames;
+    window.progressChart.data.datasets[0].data = completedData;
+    window.progressChart.data.datasets[1].data = masteredData;
+    window.progressChart.update();
+  } else {
     // Create a new chart
     window.progressChart = new Chart(ctx, {
       type: 'bar',
@@ -212,13 +217,9 @@ function renderProgressChart() {
         }
       }
     });
-  } else {
-    // Update existing chart data
-    window.progressChart.data.datasets[0].data = completedData;
-    window.progressChart.data.datasets[1].data = masteredData;
-    window.progressChart.update();
   }
 }
+
 
 
 
@@ -270,16 +271,15 @@ function generateChecklist() {
 
       taskDiv.innerHTML = checkboxContainer + linkButton;
       taskChecklist.appendChild(taskDiv);
-      updateTaskColor(lessonKey); // Initial color update
+      updateTaskColor(lessonKey);
     }
   }
 
-  // Call renderProgressChart once initially to draw the chart with initial data
-  renderProgressChart();
-  
-  // Ensure the save button is added
+  renderProgressChart(); // Call initially to render the chart with initial data
+
   taskChecklist.innerHTML += `<button class="save-progress-button" onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 
 
