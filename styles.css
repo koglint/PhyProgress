@@ -105,6 +105,65 @@ h1 {
   z-index: 1000; /* Ensures the button stays on top */
 }
 
+/* Style for the toggle button */
+#authToggleButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 10px;
+  background-color: #007BFF;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Modal styles */
+.auth-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #333;
+  color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+  z-index: 1000;
+}
+
+.auth-modal h2 {
+  margin-top: 0;
+}
+
+.auth-modal input {
+  width: 90%;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 5px;
+  border: none;
+}
+
+.auth-modal button {
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.auth-modal p {
+  font-size: 0.9em;
+}
+
+.auth-modal a {
+  color: #00aaff;
+  text-decoration: none;
+}
+
+
 .colourNone { background-color: #aec6cf; }
 .colourOne { background-color: #ff6961; }
 .colourTwo { background-color: #ffb347; }
