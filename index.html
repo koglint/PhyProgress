@@ -223,6 +223,8 @@
   }
 }
 
+    window.renderProgressChart = renderProgressChart;
+
 
 
     
@@ -288,6 +290,7 @@ function generateChecklist() {
   taskChecklist.innerHTML += `<button class="save-progress-button" onclick="saveProgress()">Save Progress</button>`;
 }
 
+window.generateChecklist = generateChecklist;
 
 
 
