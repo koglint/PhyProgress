@@ -151,7 +151,9 @@
     
 
 
-function renderProgressChart() {
+
+
+    function renderProgressChart() {
   const moduleNames = Object.keys(lessonData);
   const completedData = [];
   const masteredData = [];
@@ -178,19 +180,9 @@ function renderProgressChart() {
 
   const ctx = document.getElementById('progressChart').getContext('2d');
 
-  if (window.progressChart) {
-    // Ensure `window.progressChart` and its properties are properly defined before updating
-    if (window.progressChart.data && window.progressChart.data.datasets) {
-      // Update the existing chart with new data
-      window.progressChart.data.labels = moduleNames;
-      window.progressChart.data.datasets[0].data = completedData;
-      window.progressChart.data.datasets[1].data = masteredData;
-      window.progressChart.update();
-    } else {
-      console.error("Chart data structure is not as expected.");
-    }
-  } else {
-    // Initialize a new chart if it does not exist
+  // Check if the chart exists and if it has the correct structure, else recreate it
+  if (!window.progressChart || !window.progressChart.data || !window.progressChart.data.datasets) {
+    // Initialize a new chart
     window.progressChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -222,8 +214,18 @@ function renderProgressChart() {
         }
       }
     });
+  } else {
+    // Update existing chart with new data
+    window.progressChart.data.labels = moduleNames;
+    window.progressChart.data.datasets[0].data = completedData;
+    window.progressChart.data.datasets[1].data = masteredData;
+    window.progressChart.update();
   }
 }
+
+
+
+    
 
 
 
