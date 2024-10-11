@@ -13,27 +13,33 @@
 
 <div id="authStatus"><span id="statusIcon">Logged Out</span></div>
 
-<!-- AuthContainer and forms -->
-<details id="authContainer">
-  <summary>Login or Logout</summary>
-  <div id="authForm">
-    <div id="registerForm">
-      <h2>Register</h2>
-      <input type="email" id="registerEmail" placeholder="Email" required>
-      <input type="password" id="registerPassword" placeholder="Password" required><br>
-      <input type="text" id="registerFirstName" placeholder="First Name" required>
-      <input type="text" id="registerLastName" placeholder="Last Name" required><br>
-      <button onclick="handleRegister()">Register</button>
-    </div>
-    <div id="loginForm">
-      <h2>Login</h2>
-      <input type="email" id="loginEmail" placeholder="Email" required>
-      <input type="password" id="loginPassword" placeholder="Password" required>
-      <button onclick="handleLogin()">Login</button>
-    </div>
-    <button onclick="handleLogout()" id="logoutButton" style="display:none;">Logout</button>
+<body>
+  <button id="authToggleButton" onclick="toggleAuthModal()">Login</button>
+  
+  <!-- Login Modal -->
+  <div id="loginModal" class="auth-modal" style="display: none;">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button onclick="handleLogin()">Login</button>
+    <p>Not registered yet? <a href="#" onclick="toggleRegisterModal()">Click here</a></p>
   </div>
-</details>
+
+  <!-- Register Modal -->
+  <div id="registerModal" class="auth-modal" style="display: none;">
+    <h2>Register</h2>
+    <input type="email" id="registerEmail" placeholder="Email" required>
+    <input type="password" id="registerPassword" placeholder="Password" required>
+    <input type="text" id="registerFirstName" placeholder="First Name" required>
+    <input type="text" id="registerLastName" placeholder="Last Name" required>
+    <button onclick="handleRegister()">Submit</button>
+  </div>
+
+  <!-- Checklist Section for Lesson Progress -->
+  <section id="taskChecklist" style="display:none;">
+    <h2>Lesson Checklist</h2>
+  </section>
+
 
 
   <!-- Checklist Section for Lesson Progress -->
@@ -214,26 +220,49 @@ async function loadTaskProgress(uid) {
 }
 
 
-    
 
-function updateStatus(isLoggedIn, userData = null) {
-  const registerForm = document.getElementById('registerForm');
-  const loginForm = document.getElementById('loginForm');
 
-  if (isLoggedIn && userData) {
-    const fullName = `${userData.firstName} ${userData.lastName}`;
-    statusIcon.textContent = `Logged in as: ${fullName}`;
-    registerForm.style.display = 'none';  // Hide register form when logged in
-    loginForm.style.display = 'none';     // Hide login form when logged in
-  } else {
-    statusIcon.textContent = "Logged Out";
-    registerForm.style.display = 'block'; // Show register form when logged out
-    loginForm.style.display = 'block';    // Show login form when logged out
-  }
-  logoutButton.style.display = isLoggedIn ? "block" : "none";
-  taskChecklist.style.display = isLoggedIn ? "block" : "none";
+
+    // Show login modal, hide register modal
+function toggleAuthModal() {
+  const loginModal = document.getElementById('loginModal');
+  const registerModal = document.getElementById('registerModal');
+  loginModal.style.display = loginModal.style.display === 'none' ? 'block' : 'none';
+  registerModal.style.display = 'none';
 }
 
+// Show register modal, hide login modal
+function toggleRegisterModal() {
+  document.getElementById('loginModal').style.display = 'none';
+  document.getElementById('registerModal').style.display = 'block';
+}
+
+    
+
+// Modify the button and hide modals after login
+function updateStatus(isLoggedIn, userData = null) {
+  const authToggleButton = document.getElementById('authToggleButton');
+  const loginModal = document.getElementById('loginModal');
+  const registerModal = document.getElementById('registerModal');
+  
+  if (isLoggedIn) {
+    authToggleButton.textContent = 'Logout';
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'none';
+    taskChecklist.style.display = 'block';
+  } else {
+    authToggleButton.textContent = 'Login';
+    taskChecklist.style.display = 'none';
+  }
+}
+
+document.getElementById('authToggleButton').addEventListener('click', () => {
+  if (authToggleButton.textContent === 'Logout') {
+    handleLogout();
+  } else {
+    toggleAuthModal();
+  }
+});
 
 
 
