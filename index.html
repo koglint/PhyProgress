@@ -184,7 +184,7 @@ function generateChecklist() {
         </div>
       `;
 
-      taskDiv.innerHTML = linkButton + checkboxContainer;
+      taskDiv.innerHTML = checkboxContainer + linkButton ;
       taskChecklist.appendChild(taskDiv);
       updateTaskColor(lessonKey); // Initial color update
     }
