@@ -74,17 +74,7 @@
 
 
 
-  window.onload = function() {
-  const authToggleButton = document.getElementById('authToggleButton');
-  
-  authToggleButton.addEventListener('click', () => {
-    if (authToggleButton.textContent === 'Logout') {
-      handleLogout();
-    } else {
-      toggleAuthModal();
-    }
-  });
-};
+
 
     
         // Show login modal, hide register modal
@@ -101,7 +91,17 @@ function toggleRegisterModal() {
   document.getElementById('registerModal').style.display = 'block';
 }
 
-
+  window.onload = function() {
+  const authToggleButton = document.getElementById('authToggleButton');
+  
+  authToggleButton.addEventListener('click', () => {
+    if (authToggleButton.textContent === 'Logout') {
+      handleLogout();
+    } else {
+      toggleAuthModal();
+    }
+  });
+};
 
 
     
