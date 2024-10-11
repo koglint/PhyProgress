@@ -60,6 +60,11 @@ h1 {
   margin-left: 10px;
 }
 
+.checkbox-heading {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
 .checkbox-item {
   display: flex;
   align-items: center; /* Align checkbox and text vertically */
