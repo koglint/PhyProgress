@@ -53,6 +53,12 @@
     import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
     import { lessonLinks, lessonData, lessonNames } from './lessonLinks.js';
 
+
+
+
+
+
+    
     const firebaseConfig = {
       apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
       authDomain: "koglinsphysicsclass.firebaseapp.com",
@@ -66,6 +72,39 @@
     const auth = getAuth();
     const db = getFirestore(app);
 
+
+
+  window.onload = function() {
+  const authToggleButton = document.getElementById('authToggleButton');
+  
+  authToggleButton.addEventListener('click', () => {
+    if (authToggleButton.textContent === 'Logout') {
+      handleLogout();
+    } else {
+      toggleAuthModal();
+    }
+  });
+};
+
+    
+        // Show login modal, hide register modal
+function toggleAuthModal() {
+  const loginModal = document.getElementById('loginModal');
+  const registerModal = document.getElementById('registerModal');
+  loginModal.style.display = loginModal.style.display === 'none' ? 'block' : 'none';
+  registerModal.style.display = 'none';
+}
+
+// Show register modal, hide login modal
+function toggleRegisterModal() {
+  document.getElementById('loginModal').style.display = 'none';
+  document.getElementById('registerModal').style.display = 'block';
+}
+
+
+
+
+    
     setPersistence(auth, browserLocalPersistence)
       .then(() => initAuthListener())
       .catch((error) => {
@@ -223,19 +262,7 @@ async function loadTaskProgress(uid) {
 
 
 
-    // Show login modal, hide register modal
-function toggleAuthModal() {
-  const loginModal = document.getElementById('loginModal');
-  const registerModal = document.getElementById('registerModal');
-  loginModal.style.display = loginModal.style.display === 'none' ? 'block' : 'none';
-  registerModal.style.display = 'none';
-}
 
-// Show register modal, hide login modal
-function toggleRegisterModal() {
-  document.getElementById('loginModal').style.display = 'none';
-  document.getElementById('registerModal').style.display = 'block';
-}
 
     
 
