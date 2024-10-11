@@ -5,18 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title> Koglin Physics </title>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 <body>
 <!--   <div id="authStatus">Status: <span id="statusIcon">Logged Out</span></div> -->
   <h1> HSC Physics </h1>
 
-  <div class="legend">
-    Started = Started the Learning Activities. <br>
-    Completed = Finished all the Learning Activities. <br>
-    Marked = Learning Activities marked using solutions or marking rubrics. <br>
-    Mastered = All Learning Activities are completed with no errors.
-  </div>
+<div class="legend">
+  Started = Started the Learning Activities. <br>
+  Completed = Finished all the Learning Activities. <br>
+  Marked = Learning Activities marked using solutions or marking rubrics. <br>
+  Mastered = All Learning Activities are completed with no errors.
+</div>
+
+<!-- Add a new section for the progress chart -->
+<section id="progressChartContainer">
+  <h2>Module Progress</h2>
+  <canvas id="progressChart"></canvas>
+</section>
+
 
   
 <div id="authStatus"><span id="statusIcon">Logged Out</span></div>
@@ -143,6 +151,76 @@
     
 
 
+// Create a function to calculate progress and render the chart
+function renderProgressChart() {
+  const moduleNames = Object.keys(lessonData);
+  const completedData = [];
+  const masteredData = [];
+
+  // Calculate completion and mastery percentages for each module
+  moduleNames.forEach(module => {
+    const lessonCount = lessonData[module];
+    let completedCount = 0;
+    let masteredCount = 0;
+
+    for (let i = 1; i <= lessonCount; i++) {
+      const lessonKey = `${module}-${i}`;
+      if (document.getElementById(`completed-${lessonKey}`).checked) {
+        completedCount++;
+      }
+      if (document.getElementById(`mastered-${lessonKey}`).checked) {
+        masteredCount++;
+      }
+    }
+
+    completedData.push((completedCount / lessonCount) * 100);
+    masteredData.push((masteredCount / lessonCount) * 100);
+  });
+
+  // Render or update the Chart.js chart
+  const ctx = document.getElementById('progressChart').getContext('2d');
+  if (window.progressChart) {
+    // Update existing chart
+    window.progressChart.data.datasets[0].data = completedData;
+    window.progressChart.data.datasets[1].data = masteredData;
+    window.progressChart.update();
+  } else {
+    // Create a new chart
+    window.progressChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: moduleNames,
+        datasets: [
+          {
+            label: 'Completed (%)',
+            data: completedData,
+            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          },
+          {
+            label: 'Mastered (%)',
+            data: masteredData,
+            backgroundColor: 'rgba(153, 102, 255, 0.6)',
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 100,
+            title: {
+              display: true,
+              text: 'Progress (%)'
+            }
+          }
+        }
+      }
+    });
+  }
+}
+
+// Update generateChecklist to call renderProgressChart after each update
 function generateChecklist() {
   taskChecklist.innerHTML = '';
   for (const [section, lessonCount] of Object.entries(lessonData)) {
@@ -166,31 +244,35 @@ function generateChecklist() {
         <div class="checkbox-container">
           <label class="checkbox-heading">${section} Lesson ${i}: ${lessonName}</label>
           <div class="checkbox-item">
-            <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
             <label for="started-${lessonKey}">Started</label>
           </div>
           <div class="checkbox-item">
-            <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
             <label for="completed-${lessonKey}">Completed</label>
           </div>
           <div class="checkbox-item">
-            <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
             <label for="checked-${lessonKey}">Marked</label>
           </div>
           <div class="checkbox-item">
-            <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
+            <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
             <label for="mastered-${lessonKey}">Mastered</label>
           </div>
         </div>
       `;
 
-      taskDiv.innerHTML = checkboxContainer + linkButton ;
+      taskDiv.innerHTML = checkboxContainer + linkButton;
       taskChecklist.appendChild(taskDiv);
       updateTaskColor(lessonKey); // Initial color update
     }
   }
+
+  // Call renderProgressChart once initially to draw the chart with initial data
+  renderProgressChart();
   taskChecklist.innerHTML += `<button class="save-progress-button" onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 
 
