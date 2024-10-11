@@ -179,12 +179,7 @@ function renderProgressChart() {
 
   // Render or update the Chart.js chart
   const ctx = document.getElementById('progressChart').getContext('2d');
-  if (window.progressChart) {
-    // Update existing chart
-    window.progressChart.data.datasets[0].data = completedData;
-    window.progressChart.data.datasets[1].data = masteredData;
-    window.progressChart.update();
-  } else {
+  if (!window.progressChart) {
     // Create a new chart
     window.progressChart = new Chart(ctx, {
       type: 'bar',
@@ -217,10 +212,21 @@ function renderProgressChart() {
         }
       }
     });
+  } else {
+    // Update existing chart data
+    window.progressChart.data.datasets[0].data = completedData;
+    window.progressChart.data.datasets[1].data = masteredData;
+    window.progressChart.update();
   }
 }
 
-// Update generateChecklist to call renderProgressChart after each update
+
+
+
+
+
+    
+
 function generateChecklist() {
   taskChecklist.innerHTML = '';
   for (const [section, lessonCount] of Object.entries(lessonData)) {
@@ -270,8 +276,11 @@ function generateChecklist() {
 
   // Call renderProgressChart once initially to draw the chart with initial data
   renderProgressChart();
+  
+  // Ensure the save button is added
   taskChecklist.innerHTML += `<button class="save-progress-button" onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 
 
