@@ -12,27 +12,30 @@
 
   <h1> HSC Physics </h1>
 
-  <!-- Collapsible Login/Register Form -->
-  <details id="authContainer">
-    <summary>Register/Login/Logout</summary>
-    <div id="authForm">
-      <div id="registerForm">
-        <h2>Register</h2>
-        <input type="email" id="registerEmail" placeholder="Email" required>
-        <input type="password" id="registerPassword" placeholder="Password" required><br>
-        <input type="text" id="registerFirstName" placeholder="First Name" required>
-        <input type="text" id="registerLastName" placeholder="Last Name" required><br>
-        <button onclick="handleRegister()">Register</button>
-      </div>
-      <div id="loginForm">
-        <h2>Login</h2>
-        <input type="email" id="loginEmail" placeholder="Email" required>
-        <input type="password" id="loginPassword" placeholder="Password" required>
-        <button onclick="handleLogin()">Login</button>
-      </div>
-      <button onclick="handleLogout()" id="logoutButton" style="display:none;">Logout</button>
+<div id="authStatus"><span id="statusIcon">Logged Out</span></div>
+
+<!-- AuthContainer and forms -->
+<details id="authContainer">
+  <summary>Login or Logout</summary>
+  <div id="authForm">
+    <div id="registerForm">
+      <h2>Register</h2>
+      <input type="email" id="registerEmail" placeholder="Email" required>
+      <input type="password" id="registerPassword" placeholder="Password" required><br>
+      <input type="text" id="registerFirstName" placeholder="First Name" required>
+      <input type="text" id="registerLastName" placeholder="Last Name" required><br>
+      <button onclick="handleRegister()">Register</button>
     </div>
-  </details>
+    <div id="loginForm">
+      <h2>Login</h2>
+      <input type="email" id="loginEmail" placeholder="Email" required>
+      <input type="password" id="loginPassword" placeholder="Password" required>
+      <button onclick="handleLogin()">Login</button>
+    </div>
+    <button onclick="handleLogout()" id="logoutButton" style="display:none;">Logout</button>
+  </div>
+</details>
+
 
   <!-- Checklist Section for Lesson Progress -->
   <section id="taskChecklist" style="display:none;">
@@ -216,17 +219,22 @@ async function loadTaskProgress(uid) {
 
 function updateStatus(isLoggedIn, userData = null) {
   const registerForm = document.getElementById('registerForm');
+  const loginForm = document.getElementById('loginForm');
+
   if (isLoggedIn && userData) {
     const fullName = `${userData.firstName} ${userData.lastName}`;
     statusIcon.textContent = `Logged in as: ${fullName}`;
     registerForm.style.display = 'none';  // Hide register form when logged in
+    loginForm.style.display = 'none';     // Hide login form when logged in
   } else {
     statusIcon.textContent = "Logged Out";
-    registerForm.style.display = 'block';  // Show register form when logged out
+    registerForm.style.display = 'block'; // Show register form when logged out
+    loginForm.style.display = 'block';    // Show login form when logged out
   }
   logoutButton.style.display = isLoggedIn ? "block" : "none";
   taskChecklist.style.display = isLoggedIn ? "block" : "none";
 }
+
 
 
 
