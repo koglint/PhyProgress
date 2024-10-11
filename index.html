@@ -285,10 +285,9 @@ function generateChecklist() {
     }
   }
 
-  renderProgressChart(); // Call initially to render the chart with initial data
-
   taskChecklist.innerHTML += `<button class="save-progress-button" onclick="saveProgress()">Save Progress</button>`;
 }
+
 
 window.generateChecklist = generateChecklist;
 
@@ -362,10 +361,13 @@ async function loadTaskProgress(uid) {
     } else {
       console.log("No task progress found for this user.");
     }
+    // Render the chart after loading progress
+    renderProgressChart();
   } catch (error) {
     console.error("Error loading task progress:", error);
   }
 }
+
 
 
 
