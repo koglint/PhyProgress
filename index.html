@@ -159,17 +159,19 @@ function updateTaskColor(key) {
   const checkedCount = checkboxes.filter(checkbox => checkbox.checked).length;
 
   // Remove all color classes
-  taskDiv.classList.remove('red', 'orange', 'yellow', 'green');
+  taskDiv.classList.remove('colourFour', 'colourThree', 'colourTwo', 'colourOne', 'colourNone');
 
   // Apply the color based on the count
   if (checkedCount === 4) {
-    taskDiv.classList.add('green');
+    taskDiv.classList.add('colourFour');
   } else if (checkedCount === 3) {
-    taskDiv.classList.add('yellow');
+    taskDiv.classList.add('colourThree');
   } else if (checkedCount === 2) {
-    taskDiv.classList.add('orange');
+    taskDiv.classList.add('colourTwo');
+  } else if (checkedCount === 1) {
+    taskDiv.classList.add('colourOne');
   } else {
-    taskDiv.classList.add('red');
+    taskDiv.classList.add('colourNone');
   }
 }
 
