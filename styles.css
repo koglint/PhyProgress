@@ -89,8 +89,8 @@ html, body {
   z-index: 1000; /* Ensures the button stays on top */
 }
 
-.colourNone { background-color: #4D4D4F; } /* Dark Steampunk Grey*/
-.colourOne { background-color: #CD7F32; } /* Bronze*/
-.colourTwo { background-color: #C0C0C0; } /* Silver*/
+.colourNone { background-color: #C9C1C1; } /* Steampunk Grey*/
+.colourOne { background-color: #CD853F; } /* Peru Bronze*/
+.colourTwo { background-color: #CECECE; } /* Platinum Silver*/
 .colourThree { background-color: #FFD700; } /* Gold */
 .colourFour { background-color: #9AFEFF; } /* Electric Blue*/
