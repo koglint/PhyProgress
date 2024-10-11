@@ -12,10 +12,10 @@
   <h1> HSC Physics </h1>
 
   <div class="legend">
-    Started = Started the Learning Activities <br>
-    Completed = Finished all the Learning Activities <br>
-    Marked = Learning Activities marked using solutions or marking rubrics <br>
-    Mastered = All Learning Activities are completed with no errors
+    Started = Started the Learning Activities. <br>
+    Completed = Finished all the Learning Activities. <br>
+    Marked = Learning Activities marked using solutions or marking rubrics. <br>
+    Mastered = All Learning Activities are completed with no errors.
   </div>
 
   
@@ -164,7 +164,7 @@ function generateChecklist() {
 
       const checkboxContainer = `
         <div class="checkbox-container">
-          <label>${section} Lesson ${i}: ${lessonName}</label>
+          <label class="checkbox-heading">${section} Lesson ${i}: ${lessonName}</label>
           <div class="checkbox-item">
             <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}')">
             <label for="started-${lessonKey}">Started</label>
