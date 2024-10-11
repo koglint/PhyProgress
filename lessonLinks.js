@@ -33,9 +33,9 @@ export const lessonNames = {
 };
 
 export const lessonLinks = {
-  '5.1-1': 'https://example.com/lesson1',
-  '5.1-2': 'https://example.com/lesson2',
-  '5.1-3': 'https://example.com/lesson3',
+  '5.1-1': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/hsc-classes/module-5-lessons/module-5-1#h.77yezm3v091b',
+  '5.1-2': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/hsc-classes/module-5-lessons/module-5-1#h.w9y76slkc7tp',
+  '5.1-3': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/hsc-classes/module-5-lessons/module-5-1#h.7ktddjo0ng7c',
   // Add more links as needed
 };
 
