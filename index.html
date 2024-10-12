@@ -202,8 +202,8 @@ function renderProgressChart() {
 
   const ctx = chartElement.getContext('2d');
 
-  // Destroy previous chart instance if exists
-  if (window.progressChart) {
+  // Check and destroy previous chart instance if exists and is a Chart instance
+  if (window.progressChart instanceof Chart) {
     window.progressChart.destroy();
   }
 
@@ -217,7 +217,7 @@ function renderProgressChart() {
           label: 'Completed (%)',
           data: completedData,
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
-          barPercentage: 0.5, // Adjust bar width for better grouping
+          barPercentage: 0.5,
           categoryPercentage: 1.0,
         },
         {
@@ -230,7 +230,7 @@ function renderProgressChart() {
       ]
     },
     options: {
-      indexAxis: 'y', // Horizontal bar chart
+      indexAxis: 'y',
       responsive: true,
       maintainAspectRatio: false,
       scales: {
@@ -247,7 +247,7 @@ function renderProgressChart() {
           }
         },
         y: {
-          stacked: false, // Ensures bars are side by side
+          stacked: false,
           ticks: {
             color: '#ffffff'
           }
@@ -263,6 +263,7 @@ function renderProgressChart() {
     }
   });
 }
+
 
 
 
