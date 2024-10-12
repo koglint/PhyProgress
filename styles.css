@@ -197,7 +197,7 @@ h1 {
 #progressChart {
   max-width: 100%;
   height: auto;
-  min-height: calc(50px * 5); /* Adjust 5 based on the number of modules if fixed */
+  min-height: 200px; /* Adjust 5 based on the number of modules if fixed */
 }
 
 .hidden {
