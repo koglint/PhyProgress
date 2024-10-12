@@ -4,6 +4,7 @@ export const lessonData = {
   '5.1': 3,
   '5.2': 6,
   '5.3': 6,
+  '6.1': 4
   // Expand as needed
 };
 
@@ -28,7 +29,13 @@ export const lessonNames = {
     'Keplers Laws',
     'Escape Velocity',
     'Energy of Satellites'
-  ]
+  ],
+  '6.1': [
+    'Charges in Electric Fields',
+    'Electric vs Gravitational Trajectories',
+    'Charges in Magnetic Fields',
+    'Comparing E- and B- Fields'
+    
   // Add more sections as needed
 };
 
@@ -48,6 +55,10 @@ export const lessonLinks = {
   '5.3-4': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-5-3#h.acffqmnkbull',
   '5.3-5': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-5-3#h.inkh5ed8p88n',
   '5.3-6': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-5-3#h.skem8i1q43xe',
+  '6.1-1': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.tcyy4s9ro8bi',
+  '6.1-2': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.vbo54k9ppw0f',
+  '6.1-3': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.ozhe4umfefz0',
+  '6.1-4': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.6ws36315lj8z'
   
   // Add more links as needed
 };
