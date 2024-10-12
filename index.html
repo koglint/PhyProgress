@@ -159,6 +159,7 @@ function renderProgressChart() {
   const completedData = [];
   const masteredData = [];
 
+  // Calculate progress data
   let totalCompletedCount = 0;
   let totalMasteredCount = 0;
   let totalLessonCount = 0;
@@ -186,19 +187,20 @@ function renderProgressChart() {
     totalLessonCount += lessonCount;
   });
 
-  // Calculate overall progress
+  // Add overall progress calculation
   const overallCompleted = (totalCompletedCount / totalLessonCount) * 100;
   const overallMastered = (totalMasteredCount / totalLessonCount) * 100;
 
-  // Add 'Overall' data
   moduleNames.push('Overall');
   completedData.push(overallCompleted);
   masteredData.push(overallMastered);
 
-  const ctx = document.getElementById('progressChart').getContext('2d');
+  // Set dynamic height based on module count
+  const chartElement = document.getElementById('progressChart');
+  const moduleCount = moduleNames.length;
+  chartElement.style.minHeight = `${moduleCount * 50}px`;
 
-  // Dynamically set the minimum height based on the number of modules
-  document.getElementById('progressChart').style.minHeight = `${moduleNames.length * 50}px`;
+  const ctx = chartElement.getContext('2d');
 
   if (!window.progressChart || !window.progressChart.data || !window.progressChart.data.datasets) {
     window.progressChart = new Chart(ctx, {
@@ -221,6 +223,7 @@ function renderProgressChart() {
       options: {
         indexAxis: 'y',
         responsive: true,
+        maintainAspectRatio: false,
         scales: {
           x: {
             beginAtZero: true,
@@ -228,22 +231,22 @@ function renderProgressChart() {
             title: {
               display: true,
               text: 'Progress (%)',
-              color: '#ffffff' // X-axis title color
+              color: '#ffffff'
             },
             ticks: {
-              color: '#ffffff' // X-axis tick labels color
+              color: '#ffffff'
             }
           },
           y: {
             ticks: {
-              color: '#ffffff' // Y-axis tick labels color
+              color: '#ffffff'
             }
           }
         },
         plugins: {
           legend: {
             labels: {
-              color: '#ffffff' // Legend font color
+              color: '#ffffff'
             }
           }
         }
@@ -257,20 +260,6 @@ function renderProgressChart() {
   }
 }
 
-// Function to toggle chart visibility
-function toggleChartVisibility() {
-  const chartContainer = document.getElementById('progressChartContainer');
-  const toggleButton = document.getElementById('toggleChartButton');
-  const chartContent = chartContainer.querySelector('canvas');
-
-  if (chartContent.classList.contains('hidden')) {
-    chartContent.classList.remove('hidden');
-    toggleButton.textContent = 'Collapse Chart';
-  } else {
-    chartContent.classList.add('hidden');
-    toggleButton.textContent = 'Expand Chart';
-  }
-}
 
 
 
