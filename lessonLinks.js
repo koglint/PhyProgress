@@ -35,7 +35,7 @@ export const lessonNames = {
     'Electric vs Gravitational Trajectories',
     'Charges in Magnetic Fields',
     'Comparing E- and B- Fields'
-    
+  ]
   // Add more sections as needed
 };
 
