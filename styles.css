@@ -191,12 +191,19 @@ h1 {
   border-radius: 8px;
   color: #ffffff;
   border: 1px solid #ddd;
+  overflow: hidden;
 }
 
 #progressChart {
   max-width: 100%;
   height: auto;
+  min-height: calc(50px * 5); /* Adjust 5 based on the number of modules if fixed */
 }
+
+.hidden {
+  display: none;
+}
+
 
 .chartjs-label, .chartjs-title, .chartjs-legend, .chartjs-tooltip {
   color: #ffffff; /* Adjust to the desired font color */
