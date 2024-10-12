@@ -159,7 +159,6 @@ function renderProgressChart() {
   const completedData = [];
   const masteredData = [];
 
-  // Calculate progress data
   let totalCompletedCount = 0;
   let totalMasteredCount = 0;
   let totalLessonCount = 0;
@@ -187,7 +186,6 @@ function renderProgressChart() {
     totalLessonCount += lessonCount;
   });
 
-  // Add overall progress calculation
   const overallCompleted = (totalCompletedCount / totalLessonCount) * 100;
   const overallMastered = (totalMasteredCount / totalLessonCount) * 100;
 
@@ -195,19 +193,16 @@ function renderProgressChart() {
   completedData.push(overallCompleted);
   masteredData.push(overallMastered);
 
-  // Set dynamic height based on module count
   const chartElement = document.getElementById('progressChart');
   const moduleCount = moduleNames.length;
   chartElement.style.minHeight = `${moduleCount * 50}px`;
 
   const ctx = chartElement.getContext('2d');
 
-  // Check and destroy previous chart instance if exists and is a Chart instance
   if (window.progressChart instanceof Chart) {
     window.progressChart.destroy();
   }
 
-  // Create grouped bar chart
   window.progressChart = new Chart(ctx, {
     type: 'bar',
     data: {
@@ -217,15 +212,15 @@ function renderProgressChart() {
           label: 'Completed (%)',
           data: completedData,
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
-          barPercentage: 0.5,
-          categoryPercentage: 1.0,
+          barPercentage: 1.0,
+          categoryPercentage: 0.6,
         },
         {
           label: 'Mastered (%)',
           data: masteredData,
           backgroundColor: 'rgba(153, 102, 255, 0.6)',
-          barPercentage: 0.5,
-          categoryPercentage: 1.0,
+          barPercentage: 1.0,
+          categoryPercentage: 0.6,
         }
       ]
     },
@@ -235,6 +230,7 @@ function renderProgressChart() {
       maintainAspectRatio: false,
       scales: {
         x: {
+          stacked: true,
           beginAtZero: true,
           max: 100,
           title: {
@@ -263,6 +259,7 @@ function renderProgressChart() {
     }
   });
 }
+
 
 
 
