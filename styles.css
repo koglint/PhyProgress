@@ -193,8 +193,14 @@ h1 {
 }
 
 #progressChart {
-  color: #ffffff
+  max-width: 100%;
+  height: auto;
 }
+
+.chartjs-label, .chartjs-title, .chartjs-legend, .chartjs-tooltip {
+  color: #ffffff; /* Adjust to the desired font color */
+}
+
 
 
 
