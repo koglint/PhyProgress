@@ -192,13 +192,12 @@ h1 {
   color: #ffffff;
   border: 1px solid #ddd;
   overflow: hidden;
-  min-height: 200px; 
+  height: 200px; 
 
 }
 
 #progressChart {
   max-width: 100%;
-  height: auto;
 }
 
 .hidden {
