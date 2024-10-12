@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Koglin Physics </title>
+  <title> Physics Progress </title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -21,6 +21,7 @@
 
 <!-- Add a new section for the progress chart -->
 <section id="progressChartContainer">
+  <button id="toggleChartButton" onclick="toggleChartVisibility()">Collapse Chart</button>
   <h2>Module Progress</h2>
   <canvas id="progressChart"></canvas>
 </section>
@@ -153,7 +154,7 @@
 
 
 
- function renderProgressChart() {
+function renderProgressChart() {
   const moduleNames = Object.keys(lessonData);
   const completedData = [];
   const masteredData = [];
@@ -196,9 +197,12 @@
 
   const ctx = document.getElementById('progressChart').getContext('2d');
 
+  // Dynamically set the minimum height based on the number of modules
+  document.getElementById('progressChart').style.minHeight = `${moduleNames.length * 50}px`;
+
   if (!window.progressChart || !window.progressChart.data || !window.progressChart.data.datasets) {
     window.progressChart = new Chart(ctx, {
-      type: 'bar', // Change chart type to 'bar' for a horizontal bar chart
+      type: 'bar',
       data: {
         labels: moduleNames,
         datasets: [
@@ -215,7 +219,7 @@
         ]
       },
       options: {
-        indexAxis: 'y', // This swaps the axes, making it a horizontal bar chart
+        indexAxis: 'y',
         responsive: true,
         scales: {
           x: {
@@ -252,6 +256,22 @@
     window.progressChart.update();
   }
 }
+
+// Function to toggle chart visibility
+function toggleChartVisibility() {
+  const chartContainer = document.getElementById('progressChartContainer');
+  const toggleButton = document.getElementById('toggleChartButton');
+  const chartContent = chartContainer.querySelector('canvas');
+
+  if (chartContent.classList.contains('hidden')) {
+    chartContent.classList.remove('hidden');
+    toggleButton.textContent = 'Collapse Chart';
+  } else {
+    chartContent.classList.add('hidden');
+    toggleButton.textContent = 'Expand Chart';
+  }
+}
+
 
 
 
