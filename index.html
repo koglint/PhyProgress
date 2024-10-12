@@ -202,63 +202,68 @@ function renderProgressChart() {
 
   const ctx = chartElement.getContext('2d');
 
-  if (!window.progressChart || !window.progressChart.data || !window.progressChart.data.datasets) {
-    window.progressChart = new Chart(ctx, {
-      type: 'bar',
-      data: {
-        labels: moduleNames,
-        datasets: [
-          {
-            label: 'Completed (%)',
-            data: completedData,
-            backgroundColor: 'rgba(75, 192, 192, 0.6)',
+  // Destroy previous chart instance if exists
+  if (window.progressChart) {
+    window.progressChart.destroy();
+  }
+
+  // Create grouped bar chart
+  window.progressChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: moduleNames,
+      datasets: [
+        {
+          label: 'Completed (%)',
+          data: completedData,
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          barPercentage: 0.5, // Adjust bar width for better grouping
+          categoryPercentage: 1.0,
+        },
+        {
+          label: 'Mastered (%)',
+          data: masteredData,
+          backgroundColor: 'rgba(153, 102, 255, 0.6)',
+          barPercentage: 0.5,
+          categoryPercentage: 1.0,
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y', // Horizontal bar chart
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: {
+          beginAtZero: true,
+          max: 100,
+          title: {
+            display: true,
+            text: 'Progress (%)',
+            color: '#ffffff'
           },
-          {
-            label: 'Mastered (%)',
-            data: masteredData,
-            backgroundColor: 'rgba(153, 102, 255, 0.6)',
-          }
-        ]
-      },
-      options: {
-        indexAxis: 'y',
-        responsive: true,
-        maintainAspectRatio: false,
-        scales: {
-          x: {
-            beginAtZero: true,
-            max: 100,
-            title: {
-              display: true,
-              text: 'Progress (%)',
-              color: '#ffffff'
-            },
-            ticks: {
-              color: '#ffffff'
-            }
-          },
-          y: {
-            ticks: {
-              color: '#ffffff'
-            }
+          ticks: {
+            color: '#ffffff'
           }
         },
-        plugins: {
-          legend: {
-            labels: {
-              color: '#ffffff'
-            }
+        y: {
+          stacked: false, // Ensures bars are side by side
+          ticks: {
+            color: '#ffffff'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#ffffff'
           }
         }
       }
-    });
-  } else {
-    window.progressChart.data.labels = moduleNames;
-    window.progressChart.data.datasets[0].data = completedData;
-    window.progressChart.data.datasets[1].data = masteredData;
-    window.progressChart.update();
-  }
+    }
+  });
 }
+
 
 
 
