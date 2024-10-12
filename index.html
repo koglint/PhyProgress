@@ -153,10 +153,14 @@
 
 
 
-  function renderProgressChart() {
+ function renderProgressChart() {
   const moduleNames = Object.keys(lessonData);
   const completedData = [];
   const masteredData = [];
+
+  let totalCompletedCount = 0;
+  let totalMasteredCount = 0;
+  let totalLessonCount = 0;
 
   moduleNames.forEach(module => {
     const lessonCount = lessonData[module];
@@ -175,13 +179,26 @@
 
     completedData.push((completedCount / lessonCount) * 100);
     masteredData.push((masteredCount / lessonCount) * 100);
+
+    totalCompletedCount += completedCount;
+    totalMasteredCount += masteredCount;
+    totalLessonCount += lessonCount;
   });
+
+  // Calculate overall progress
+  const overallCompleted = (totalCompletedCount / totalLessonCount) * 100;
+  const overallMastered = (totalMasteredCount / totalLessonCount) * 100;
+
+  // Add 'Overall' data
+  moduleNames.push('Overall');
+  completedData.push(overallCompleted);
+  masteredData.push(overallMastered);
 
   const ctx = document.getElementById('progressChart').getContext('2d');
 
   if (!window.progressChart || !window.progressChart.data || !window.progressChart.data.datasets) {
     window.progressChart = new Chart(ctx, {
-      type: 'bar',
+      type: 'bar', // Change chart type to 'bar' for a horizontal bar chart
       data: {
         labels: moduleNames,
         datasets: [
@@ -198,23 +215,24 @@
         ]
       },
       options: {
+        indexAxis: 'y', // This swaps the axes, making it a horizontal bar chart
         responsive: true,
         scales: {
-          y: {
+          x: {
             beginAtZero: true,
             max: 100,
             title: {
               display: true,
               text: 'Progress (%)',
-              color: '#ffffff' // Y-axis title color
+              color: '#ffffff' // X-axis title color
             },
             ticks: {
-              color: '#ffffff' // Y-axis tick labels color
+              color: '#ffffff' // X-axis tick labels color
             }
           },
-          x: {
+          y: {
             ticks: {
-              color: '#ffffff' // X-axis tick labels color
+              color: '#ffffff' // Y-axis tick labels color
             }
           }
         },
@@ -234,6 +252,13 @@
     window.progressChart.update();
   }
 }
+
+
+
+
+
+
+    
 
 
     window.renderProgressChart = renderProgressChart;
