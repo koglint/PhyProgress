@@ -153,12 +153,11 @@
 
 
 
-    function renderProgressChart() {
+  function renderProgressChart() {
   const moduleNames = Object.keys(lessonData);
   const completedData = [];
   const masteredData = [];
 
-  // Calculate completion and mastery percentages for each module
   moduleNames.forEach(module => {
     const lessonCount = lessonData[module];
     let completedCount = 0;
@@ -180,9 +179,7 @@
 
   const ctx = document.getElementById('progressChart').getContext('2d');
 
-  // Check if the chart exists and if it has the correct structure, else recreate it
   if (!window.progressChart || !window.progressChart.data || !window.progressChart.data.datasets) {
-    // Initialize a new chart
     window.progressChart = new Chart(ctx, {
       type: 'bar',
       data: {
@@ -208,20 +205,36 @@
             max: 100,
             title: {
               display: true,
-              text: 'Progress (%)'
+              text: 'Progress (%)',
+              color: '#ffffff' // Y-axis title color
+            },
+            ticks: {
+              color: '#ffffff' // Y-axis tick labels color
+            }
+          },
+          x: {
+            ticks: {
+              color: '#ffffff' // X-axis tick labels color
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: {
+              color: '#ffffff' // Legend font color
             }
           }
         }
       }
     });
   } else {
-    // Update existing chart with new data
     window.progressChart.data.labels = moduleNames;
     window.progressChart.data.datasets[0].data = completedData;
     window.progressChart.data.datasets[1].data = masteredData;
     window.progressChart.update();
   }
 }
+
 
     window.renderProgressChart = renderProgressChart;
 
