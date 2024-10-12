@@ -151,6 +151,7 @@ h1 {
   width: 300px;
   text-align: center;
   z-index: 1000;
+  border: 2px solid #fff;
 }
 
 .auth-modal h2 {
