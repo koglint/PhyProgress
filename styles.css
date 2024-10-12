@@ -20,7 +20,7 @@ h1 {
   margin-top: 50px; /* Space above */
   margin-bottom: 20px; /* Space below */
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Adds a subtle shadow */
-  background-color: #333; /* Background color */
+  background-color: #2e2e2e; /* Background color */
   padding: 15px; /* Padding around the text */
   border-radius: 8px; /* Rounded corners */
 }
@@ -118,11 +118,12 @@ h1 {
 }
 
 .legend {
-  background-color: #333;
+  background-color: #4d4d4d;
   color: white;
   margin: 15px;
   padding: 15px;
   border-radius: 8px;
+  border: 1px solid #ddd;
 }
 /* Style for the toggle button */
 #authToggleButton {
@@ -183,11 +184,16 @@ h1 {
 }
 
 #progressChartContainer {
-  margin: 20px;
+  margin: 15px;
   padding: 15px;
   background-color: #4d4d4d;
   border-radius: 8px;
   color: #ffffff;
+  border: 1px solid #ddd;
+}
+
+#progressChart {
+  color: #ffffff
 }
 
 
