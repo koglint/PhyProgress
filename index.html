@@ -177,7 +177,6 @@ window.toggleChartVisibility = function() {
 
 
 
-// Render Progress Chart Function
 window.renderProgressChart = function() {
   const moduleNames = Object.keys(lessonData);
   const completedData = [];
@@ -241,8 +240,12 @@ window.renderProgressChart = function() {
           position: 'bottom',
           min: 0,
           max: 100,
-          title: { display: false },
-          ticks: { color: '#ffffff', callback: value => value }
+          ticks: {
+            display: false // Hide the ticks at the bottom
+          },
+          grid: {
+            display: false // Optional: also hide the grid lines on this axis
+          }
         },
         xRight: {
           type: 'linear',
@@ -250,21 +253,35 @@ window.renderProgressChart = function() {
           min: 0,
           max: 100,
           reverse: true,
-          title: { display: false },
-          ticks: { color: '#ffffff', callback: value => value },
-          grid: { drawOnChartArea: false }
+          ticks: {
+            color: '#ffffff',
+            callback: function(value) {
+              // Only show the middle value (100%) and hide others
+              return value === 100 ? '100%' : '';
+            }
+          },
+          grid: {
+            drawOnChartArea: false // Hide the grid lines from the top axis
+          }
         },
         y: {
           stacked: true,
-          ticks: { color: '#ffffff' }
+          ticks: {
+            color: '#ffffff'
+          }
         }
       },
       plugins: {
-        legend: { display: true } // Hides the legend entirely
+        legend: {
+          labels: {
+            color: '#ffffff' // Set legend text color to white
+          }
+        }
       }
     }
   });
 };
+
 
 
 
