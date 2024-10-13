@@ -198,7 +198,7 @@ h1 {
   width: 100%;
   height: auto;
   min-height: 300px; /* Ensures a minimum height for smaller screens */
-  max-height: calc(20px * 16); /* Adjust based on the number of modules, e.g., 5 modules at 50px each */
+  max-height: calc(30px * 16); /* Adjust based on the number of modules, e.g., 5 modules at 50px each */
 }
 
 .hidden {
