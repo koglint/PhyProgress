@@ -210,7 +210,7 @@ function renderProgressChart() {
       datasets: [
         {
           label: 'Completed (%)',
-          data: completedData,
+          data: completedData.map(value => value / 2), // Halve data for left alignment
           backgroundColor: 'rgba(75, 192, 192, 0.6)',
           barPercentage: 1.0,
           categoryPercentage: 0.6,
@@ -218,7 +218,7 @@ function renderProgressChart() {
         },
         {
           label: 'Mastered (%)',
-          data: masteredData,
+          data: masteredData.map(value => value / 2), // Halve data for right alignment
           backgroundColor: 'rgba(153, 102, 255, 0.6)',
           barPercentage: 1.0,
           categoryPercentage: 0.6,
@@ -242,7 +242,8 @@ function renderProgressChart() {
             color: '#ffffff'
           },
           ticks: {
-            color: '#ffffff'
+            color: '#ffffff',
+            callback: value => value * 2 // Scale back to 0-100 range visually
           }
         },
         xRight: {
@@ -257,10 +258,11 @@ function renderProgressChart() {
             color: '#ffffff'
           },
           ticks: {
-            color: '#ffffff'
+            color: '#ffffff',
+            callback: value => value * 2 // Scale back to 0-100 range visually
           },
           grid: {
-            drawOnChartArea: false // Disable grid lines from the top axis
+            drawOnChartArea: false
           }
         },
         y: {
@@ -280,6 +282,7 @@ function renderProgressChart() {
     }
   });
 }
+
 
 
 
