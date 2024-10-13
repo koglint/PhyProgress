@@ -255,8 +255,11 @@ window.renderProgressChart = function() {
           reverse: true,
           ticks: {
             color: '#ffffff',
-            display: true
-          },
+            precision: 0,
+            callback: function(value) {
+              return value === 100 ? '100%' : ''; // Show only 100% at midpoint
+            }
+        },
           grid: {
             drawOnChartArea: true // Show the grid lines on the top axis
           }
