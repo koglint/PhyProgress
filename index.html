@@ -255,6 +255,7 @@ window.renderProgressChart = function() {
           reverse: true,
           ticks: {
             color: '#ffffff',
+            stepSize: 10, // smaller means closer together
             precision: 0,
             callback: function(value) {
               return value === 50 ? '100%' : ''; // Show only 100% at midpoint
