@@ -236,11 +236,6 @@ function renderProgressChart() {
           position: 'bottom',
           beginAtZero: true,
           max: 100,
-          title: {
-            display: true,
-            text: 'Completed (%)',
-            color: '#ffffff'
-          },
           ticks: {
             color: '#ffffff',
             callback: value => value * 2 // Scale back to 0-100 range visually
@@ -252,11 +247,6 @@ function renderProgressChart() {
           beginAtZero: true,
           max: 100,
           reverse: true,
-          title: {
-            display: true,
-            text: 'Mastered (%)',
-            color: '#ffffff'
-          },
           ticks: {
             color: '#ffffff',
             callback: value => value * 2 // Scale back to 0-100 range visually
