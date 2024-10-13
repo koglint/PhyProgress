@@ -149,6 +149,29 @@
     }
 
 
+
+
+
+
+
+  function toggleChartVisibility() {
+  const chartContainer = document.getElementById('progressChartContainer');
+  const chart = document.getElementById('progressChart');
+  const toggleButton = document.getElementById('toggleChartButton');
+
+  if (chart.style.display === 'none') {
+    chart.style.display = 'block';
+    toggleButton.textContent = 'Collapse Chart';
+  } else {
+    chart.style.display = 'none';
+    toggleButton.textContent = 'Expand Chart';
+  }
+}
+
+
+
+
+    
     
 
 
@@ -241,7 +264,7 @@ function renderProgressChart() {
           },
           ticks: {
             color: '#ffffff',
-            callback: value => value * 2 // Adjust tick range visually
+            callback: value => value * 1 // Adjust tick range visually
           }
         },
         xRight: {
@@ -255,7 +278,7 @@ function renderProgressChart() {
           },
           ticks: {
             color: '#ffffff',
-            callback: value => value * 2 // Adjust tick range visually
+            callback: value => value * 1 // Adjust tick range visually
           },
           grid: {
             drawOnChartArea: false
@@ -306,19 +329,7 @@ function renderProgressChart() {
 
 
 
-  function toggleChartVisibility() {
-  const chartContainer = document.getElementById('progressChartContainer');
-  const chart = document.getElementById('progressChart');
-  const toggleButton = document.getElementById('toggleChartButton');
 
-  if (chart.style.display === 'none') {
-    chart.style.display = 'block';
-    toggleButton.textContent = 'Collapse Chart';
-  } else {
-    chart.style.display = 'none';
-    toggleButton.textContent = 'Expand Chart';
-  }
-}
 
 
 
