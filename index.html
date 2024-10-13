@@ -12,7 +12,7 @@
 <div class="container" display="none">
     <h1> HSC Physics </h1>
 
-<div class="legend">
+<div class="legend" style="display: none;">
   Started = Started the Learning Activities. <br>
   Completed = Finished all the Learning Activities. <br>
   Marked = Learning Activities marked using solutions or marking rubrics. <br>
@@ -154,11 +154,10 @@
 
 
 
-  function toggleChartVisibility() {
-  const chartContainer = document.getElementById('progressChartContainer');
+// Function to toggle chart visibility
+window.toggleChartVisibility = function() {
   const chart = document.getElementById('progressChart');
   const toggleButton = document.getElementById('toggleChartButton');
-
   if (chart.style.display === 'none') {
     chart.style.display = 'block';
     toggleButton.textContent = 'Collapse Chart';
@@ -166,7 +165,8 @@
     chart.style.display = 'none';
     toggleButton.textContent = 'Expand Chart';
   }
-}
+};
+
 
 
 
@@ -177,33 +177,23 @@
 
 
 
-function renderProgressChart() {
+// Render Progress Chart Function
+window.renderProgressChart = function() {
   const moduleNames = Object.keys(lessonData);
   const completedData = [];
   const masteredData = [];
-
-  let totalCompletedCount = 0;
-  let totalMasteredCount = 0;
-  let totalLessonCount = 0;
+  let totalCompletedCount = 0, totalMasteredCount = 0, totalLessonCount = 0;
 
   moduleNames.forEach(module => {
     const lessonCount = lessonData[module];
-    let completedCount = 0;
-    let masteredCount = 0;
-
+    let completedCount = 0, masteredCount = 0;
     for (let i = 1; i <= lessonCount; i++) {
       const lessonKey = `${module}-${i}`;
-      if (document.getElementById(`completed-${lessonKey}`).checked) {
-        completedCount++;
-      }
-      if (document.getElementById(`mastered-${lessonKey}`).checked) {
-        masteredCount++;
-      }
+      if (document.getElementById(`completed-${lessonKey}`).checked) completedCount++;
+      if (document.getElementById(`mastered-${lessonKey}`).checked) masteredCount++;
     }
-
     completedData.push((completedCount / lessonCount) * 100);
     masteredData.push((masteredCount / lessonCount) * 100);
-
     totalCompletedCount += completedCount;
     totalMasteredCount += masteredCount;
     totalLessonCount += lessonCount;
@@ -211,20 +201,12 @@ function renderProgressChart() {
 
   const overallCompleted = (totalCompletedCount / totalLessonCount) * 100;
   const overallMastered = (totalMasteredCount / totalLessonCount) * 100;
-
   moduleNames.push('Overall');
   completedData.push(overallCompleted);
   masteredData.push(overallMastered);
 
-  const chartElement = document.getElementById('progressChart');
-  const moduleCount = moduleNames.length;
-  chartElement.style.minHeight = `${moduleCount * 50}px`;
-
-  const ctx = chartElement.getContext('2d');
-
-  if (window.progressChart instanceof Chart) {
-    window.progressChart.destroy();
-  }
+  const ctx = document.getElementById('progressChart').getContext('2d');
+  if (window.progressChart instanceof Chart) window.progressChart.destroy();
 
   window.progressChart = new Chart(ctx, {
     type: 'bar',
@@ -259,13 +241,8 @@ function renderProgressChart() {
           position: 'bottom',
           min: 0,
           max: 100,
-          title: {
-            display: false // Remove title
-          },
-          ticks: {
-            color: '#ffffff',
-            callback: value => value * 1 // Adjust tick range visually
-          }
+          title: { display: false },
+          ticks: { color: '#ffffff', callback: value => value }
         },
         xRight: {
           type: 'linear',
@@ -273,34 +250,22 @@ function renderProgressChart() {
           min: 0,
           max: 100,
           reverse: true,
-          title: {
-            display: false // Remove title
-          },
-          ticks: {
-            color: '#ffffff',
-            callback: value => value * 1 // Adjust tick range visually
-          },
-          grid: {
-            drawOnChartArea: false
-          }
+          title: { display: false },
+          ticks: { color: '#ffffff', callback: value => value },
+          grid: { drawOnChartArea: false }
         },
         y: {
           stacked: true,
-          ticks: {
-            color: '#ffffff'
-          }
+          ticks: { color: '#ffffff' }
         }
       },
       plugins: {
-        legend: {
-          labels: {
-            color: '#ffffff'
-          }
-        }
+        legend: { display: false } // Hides the legend entirely
       }
     }
   });
-}
+};
+
 
 
 
