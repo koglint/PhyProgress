@@ -241,7 +241,7 @@ window.renderProgressChart = function() {
           min: 0,
           max: 100,
           ticks: {
-            display: false // Hide the ticks at the bottom
+            display: false // Show/Hide the ticks at the bottom
           },
           grid: {
             display: false // Optional: also hide the grid lines on this axis
@@ -255,13 +255,11 @@ window.renderProgressChart = function() {
           reverse: true,
           ticks: {
             color: '#ffffff',
-            callback: function(value) {
-              // Only show the middle value (100%) and hide others
-              return value === 100 ? '100%' : '';
+            display: true
             }
           },
           grid: {
-            drawOnChartArea: false // Hide the grid lines from the top axis
+            drawOnChartArea: true // Show/Hide the grid lines from the top axis
           }
         },
         y: {
