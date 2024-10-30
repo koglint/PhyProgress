@@ -9,6 +9,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { lessonData } from './lessonLinks.js'; // Import lessonData for module keys
 
     const firebaseConfig = {
       apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
@@ -23,21 +24,21 @@
     const auth = getAuth();
     const db = getFirestore(app);
 
-    const modules = ["5.1", "5.2", "5.3", "6.1", "6.2"]; // Add more as needed
+    // Extract module keys from lessonData
+    const modules = Object.keys(lessonData);
 
     // Load existing CYU data and populate the fields
-    function loadCYUData(user) {
-      const cyuContainer = document.getElementById('cyuContainer');
-      modules.forEach(async (module) => {
-        const inputField = document.getElementById(`cyu-${module}`);
-        const cyuDoc = await getDoc(doc(db, "cyuScores", user.uid));
-        if (cyuDoc.exists()) {
-          const cyuData = cyuDoc.data();
+    async function loadCYUData(user) {
+      const cyuDoc = await getDoc(doc(db, "cyuScores", user.uid));
+      if (cyuDoc.exists()) {
+        const cyuData = cyuDoc.data();
+        modules.forEach(module => {
+          const inputField = document.getElementById(`cyu-${module}`);
           if (cyuData[module] !== undefined) {
             inputField.value = cyuData[module];
           }
-        }
-      });
+        });
+      }
     }
 
     // Save CYU data to Firestore
@@ -56,7 +57,6 @@
       }
     }
 
-    // Wait for the user to be authenticated before loading CYU data
     onAuthStateChanged(auth, (user) => {
       if (user) {
         loadCYUData(user);
@@ -70,14 +70,36 @@
   <h1>Enter Your CYU Scores</h1>
   <div id="cyuContainer">
     <form id="cyuForm">
-      ${modules.map(module => `
-        <label for="cyu-${module}">${module}:</label>
-        <input type="number" id="cyu-${module}" placeholder="0" min="0" max="100" required>
-        <span>%</span>
-        <br>
-      `).join('')}
       <button type="button" onclick="saveCYUData()" class="save-cyu-button">Save</button>
     </form>
   </div>
+
+  <script type="module">
+    import { lessonData } from './lessonLinks.js'; // Re-import lessonData for module keys
+    const cyuForm = document.getElementById('cyuForm');
+
+    // Generate input fields for each module section
+    Object.keys(lessonData).forEach(module => {
+      const label = document.createElement('label');
+      label.setAttribute('for', `cyu-${module}`);
+      label.textContent = `${module}: `;
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.id = `cyu-${module}`;
+      input.placeholder = "0";
+      input.min = "0";
+      input.max = "100";
+      input.required = true;
+
+      const percent = document.createElement('span');
+      percent.textContent = " %";
+
+      cyuForm.insertBefore(label, cyuForm.firstChild);
+      cyuForm.insertBefore(input, cyuForm.firstChild);
+      cyuForm.insertBefore(percent, cyuForm.firstChild);
+      cyuForm.insertBefore(document.createElement("br"), cyuForm.firstChild);
+    });
+  </script>
 </body>
 </html>
