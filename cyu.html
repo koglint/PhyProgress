@@ -9,7 +9,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
     import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-    import { lessonData } from './lessonLinks.js'; // Import lessonData for module keys
+    import { lessonData } from './lessonLinks.js';
 
     const firebaseConfig = {
       apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
@@ -24,7 +24,7 @@
     const auth = getAuth();
     const db = getFirestore(app);
 
-    const modules = Object.keys(lessonData);
+    const modules = Object.keys(lessonData).sort(); // Sort modules for top-to-bottom order
 
     async function loadCYUData(user) {
       const cyuDoc = await getDoc(doc(db, "cyuScores", user.uid));
@@ -71,12 +71,11 @@
   </script>
 </head>
 <body>
-  <button type="button" onclick="window.location.href='index.html'" class="back-button">Back to Main Page</button>
   <h1>Enter Your CYU Scores</h1>
   <div id="cyuContainer">
     <form id="cyuForm">
       <button type="button" onclick="saveCYUData()" class="save-cyu-button">Save</button>
-
+      <button type="button" onclick="window.location.href='index.html'" class="back-button">Back to Main Page</button>
     </form>
   </div>
 
@@ -84,7 +83,7 @@
     import { lessonData } from './lessonLinks.js';
     const cyuForm = document.getElementById('cyuForm');
 
-    Object.keys(lessonData).forEach(module => {
+    Object.keys(lessonData).sort().forEach(module => { // Sort modules for top-down order
       const label = document.createElement('label');
       label.setAttribute('for', `cyu-${module}`);
       label.textContent = `${module}: `;
@@ -100,10 +99,10 @@
       const percent = document.createElement('span');
       percent.textContent = " %";
 
-      cyuForm.insertBefore(label, cyuForm.firstChild);
-      cyuForm.insertBefore(input, cyuForm.firstChild);
-      cyuForm.insertBefore(percent, cyuForm.firstChild);
-      cyuForm.insertBefore(document.createElement("br"), cyuForm.firstChild);
+      cyuForm.appendChild(label);
+      cyuForm.appendChild(input);
+      cyuForm.appendChild(percent);
+      cyuForm.appendChild(document.createElement("br"));
     });
   </script>
 </body>
