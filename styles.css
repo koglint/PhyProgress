@@ -211,6 +211,14 @@ h1 {
   color: #ffffff; /* Adjust to the desired font color */
 }
 
+/* Styling for the top banner image */
+.top-banner {
+  width: 100%;
+  max-width: 100%;
+  height: auto; /* Keeps the aspect ratio */
+  display: block;
+  margin: 0 auto 20px; /* Adds space below the image */
+}
 
 
 
