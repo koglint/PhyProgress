@@ -3,18 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Physics Progress </title>
+  <title>Physics Progress</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="container">
-
-    <h1> HSC Physics </h1>
-    <button onclick="window.open('cyu.html', '_blank')" class="cyu-button" id="cyuButton">Check Your Understanding (CYU) Questions</button>
-    <h2 id="scopeHeading"> Scope and Sequence (Approximate) </h2>
+    <h1>HSC Physics</h1>
+    <button onclick="window.open('cyu.html', '_blank')" class="cyu-button" id="cyuButton" style="display:none;">Check Your Understanding (CYU) Questions</button>
+    <h2 id="scopeHeading">Scope and Sequence (Approximate)</h2>
     <img src="PHYSS.png" alt="Physics Scope and Sequence" class="top-banner">
-    <h2 id="progressHeading"> Progress </h2>
+    <h2 id="progressHeading" style="display:none;">Progress</h2>
 
     <!-- Legend for progress chart -->
     <div class="legend" style="display: none;">
@@ -25,7 +24,7 @@
     </div>
 
     <!-- Progress chart section -->
-    <section id="progressChartContainer">
+    <section id="progressChartContainer" style="display:none;">
       <button id="toggleChartButton" onclick="toggleChartVisibility()">Collapse Chart</button>
       <h2>Module Progress</h2>
       <canvas id="progressChart"></canvas>
@@ -78,59 +77,104 @@
       const auth = getAuth();
       const db = getFirestore(app);
 
-      // Set persistence and initialize listener
       setPersistence(auth, browserLocalPersistence)
         .then(() => initAuthListener())
         .catch((error) => console.error("Error setting persistence:", error));
 
-      // Function to toggle the visibility of elements based on login status
-      function updateStatus(isLoggedIn, userData = null) {
-        const cyuButton = document.getElementById("cyuButton");
-        const progressHeading = document.getElementById("progressHeading");
-        const progressChartContainer = document.getElementById("progressChartContainer");
+      const cyuButton = document.getElementById("cyuButton");
+      const progressChartContainer = document.getElementById("progressChartContainer");
+      const progressHeading = document.getElementById("progressHeading");
 
-        if (isLoggedIn && userData) {
-          cyuButton.style.display = "block";
-          progressHeading.style.display = "block";
-          progressChartContainer.style.display = "block";
-          document.getElementById('authToggleButton').textContent = 'Logout';
-        } else {
-          cyuButton.style.display = "none";
-          progressHeading.style.display = "none";
-          progressChartContainer.style.display = "none";
-          document.getElementById('authToggleButton').textContent = 'Login';
+      // Function to toggle the authentication modal
+      function toggleAuthModal() {
+        const loginModal = document.getElementById("loginModal");
+        loginModal.style.display = loginModal.style.display === "none" ? "block" : "none";
+      }
+
+      // Function to show registration modal
+      function toggleRegisterModal() {
+        document.getElementById("loginModal").style.display = "none";
+        document.getElementById("registerModal").style.display = "block";
+      }
+
+      async function handleLogin() {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          toggleAuthModal();
+          updateStatus(true);
+        } catch (error) {
+          alert("Login failed: " + error.message);
         }
       }
 
-      // Attach the click event to authToggleButton
-      document.getElementById('authToggleButton').addEventListener('click', () => {
-        const authToggleButton = document.getElementById('authToggleButton');
-        if (authToggleButton.textContent === 'Logout') {
-          handleLogout();
-        } else {
-          toggleAuthModal();
-        }
-      });
+      async function handleRegister() {
+        const email = document.getElementById("registerEmail").value;
+        const password = document.getElementById("registerPassword").value;
+        const firstName = document.getElementById("registerFirstName").value;
+        const lastName = document.getElementById("registerLastName").value;
 
-      // Initialize auth listener to detect login state
+        try {
+          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+          await saveUserData(userCredential.user.uid, firstName, lastName);
+          alert(`Registration successful! Welcome ${firstName}`);
+          toggleRegisterModal();
+        } catch (error) {
+          alert("Registration failed: " + error.message);
+        }
+      }
+
+      async function saveUserData(uid, firstName, lastName) {
+        try {
+          await setDoc(doc(db, "users", uid), { firstName, lastName });
+        } catch (error) {
+          console.error("Error saving user data:", error);
+        }
+      }
+
+      function updateStatus(isLoggedIn) {
+        if (isLoggedIn) {
+          document.getElementById("authToggleButton").textContent = "Logout";
+          cyuButton.style.display = "inline";
+          progressChartContainer.style.display = "block";
+          progressHeading.style.display = "block";
+        } else {
+          document.getElementById("authToggleButton").textContent = "Login";
+          cyuButton.style.display = "none";
+          progressChartContainer.style.display = "none";
+          progressHeading.style.display = "none";
+        }
+      }
+
       function initAuthListener() {
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
           if (user) {
-            const userData = await loadUserData(user.uid);
-            if (userData) {
-              updateStatus(true, userData);
-              generateChecklist();
-              await loadTaskProgress(user.uid);
-            } else {
-              updateStatus(false);
-            }
+            updateStatus(true);
           } else {
             updateStatus(false);
           }
         });
       }
 
-      // Login function and other supporting functions go here...
+      async function handleLogout() {
+        try {
+          await signOut(auth);
+          alert("Logout successful!");
+          updateStatus(false);
+        } catch (error) {
+          console.error("Error logging out:", error);
+        }
+      }
+      
+      document.getElementById("authToggleButton").addEventListener("click", () => {
+        const authToggleButton = document.getElementById("authToggleButton");
+        if (authToggleButton.textContent === "Logout") {
+          handleLogout();
+        } else {
+          toggleAuthModal();
+        }
+      });
     </script>
 </div>
 </body>
