@@ -41,7 +41,7 @@
       }
     }
 
-    // Save CYU data to Firestore
+    // Save CYU data to Firestore with success/failure alert
     async function saveCYUData() {
       const user = auth.currentUser;
       if (user) {
@@ -50,12 +50,20 @@
           const value = document.getElementById(`cyu-${module}`).value;
           cyuData[module] = value ? parseInt(value) : 0; // Default to 0 if no value is entered
         });
-        await setDoc(doc(db, "cyuScores", user.uid), cyuData, { merge: true });
-        alert("CYU scores saved successfully!");
+        try {
+          await setDoc(doc(db, "cyuScores", user.uid), cyuData, { merge: true });
+          alert("CYU scores saved successfully!");
+        } catch (error) {
+          console.error("Error saving CYU scores:", error);
+          alert("Failed to save CYU scores. Please try again.");
+        }
       } else {
         alert("You must be logged in to save your CYU scores.");
       }
     }
+
+    // Expose saveCYUData to the global scope
+    window.saveCYUData = saveCYUData;
 
     onAuthStateChanged(auth, (user) => {
       if (user) {
