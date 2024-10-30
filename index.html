@@ -32,15 +32,15 @@
 
     <div id="authStatus"><span id="statusIcon">Logged Out</span></div>
 
-    <button id="authToggleButton" onclick="toggleAuthModal()">Login</button>
+    <button id="authToggleButton" onclick="window.toggleAuthModal()">Login</button>
 
     <!-- Login Modal -->
     <div id="loginModal" class="auth-modal" style="display: none;">
       <h2>Login</h2>
       <input type="email" id="loginEmail" placeholder="Email" required>
       <input type="password" id="loginPassword" placeholder="Password" required>
-      <button onclick="handleLogin()">Login</button>
-      <p>Not registered yet? <a href="#" onclick="toggleRegisterModal()">Click here</a></p>
+      <button onclick="window.handleLogin()">Login</button>
+      <p>Not registered yet? <a href="#" onclick="window.toggleRegisterModal()">Click here</a></p>
     </div>
 
     <!-- Register Modal -->
@@ -50,7 +50,7 @@
       <input type="password" id="registerPassword" placeholder="Password" required>
       <input type="text" id="registerFirstName" placeholder="First Name" required>
       <input type="text" id="registerLastName" placeholder="Last Name" required>
-      <button onclick="handleRegister()">Submit</button>
+      <button onclick="window.handleRegister()">Submit</button>
     </div>
 
     <!-- Lesson Checklist Section -->
@@ -86,30 +86,30 @@
       const progressHeading = document.getElementById("progressHeading");
 
       // Function to toggle the authentication modal
-      function toggleAuthModal() {
+      window.toggleAuthModal = function() {
         const loginModal = document.getElementById("loginModal");
         loginModal.style.display = loginModal.style.display === "none" ? "block" : "none";
-      }
+      };
 
       // Function to show registration modal
-      function toggleRegisterModal() {
+      window.toggleRegisterModal = function() {
         document.getElementById("loginModal").style.display = "none";
         document.getElementById("registerModal").style.display = "block";
-      }
+      };
 
-      async function handleLogin() {
+      window.handleLogin = async function() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
         try {
           await signInWithEmailAndPassword(auth, email, password);
-          toggleAuthModal();
+          window.toggleAuthModal();
           updateStatus(true);
         } catch (error) {
           alert("Login failed: " + error.message);
         }
-      }
+      };
 
-      async function handleRegister() {
+      window.handleRegister = async function() {
         const email = document.getElementById("registerEmail").value;
         const password = document.getElementById("registerPassword").value;
         const firstName = document.getElementById("registerFirstName").value;
@@ -119,11 +119,11 @@
           const userCredential = await createUserWithEmailAndPassword(auth, email, password);
           await saveUserData(userCredential.user.uid, firstName, lastName);
           alert(`Registration successful! Welcome ${firstName}`);
-          toggleRegisterModal();
+          window.toggleRegisterModal();
         } catch (error) {
           alert("Registration failed: " + error.message);
         }
-      }
+      };
 
       async function saveUserData(uid, firstName, lastName) {
         try {
@@ -157,7 +157,7 @@
         });
       }
 
-      async function handleLogout() {
+      window.handleLogout = async function() {
         try {
           await signOut(auth);
           alert("Logout successful!");
@@ -165,14 +165,14 @@
         } catch (error) {
           console.error("Error logging out:", error);
         }
-      }
+      };
       
       document.getElementById("authToggleButton").addEventListener("click", () => {
         const authToggleButton = document.getElementById("authToggleButton");
         if (authToggleButton.textContent === "Logout") {
-          handleLogout();
+          window.handleLogout();
         } else {
-          toggleAuthModal();
+          window.toggleAuthModal();
         }
       });
     </script>
