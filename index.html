@@ -3,179 +3,614 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Physics Progress</title>
+  <title> Physics Progress </title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
-<div class="container">
-    <h1>HSC Physics</h1>
-    <button onclick="window.open('cyu.html', '_blank')" class="cyu-button" id="cyuButton" style="display:none;">Check Your Understanding (CYU) Questions</button>
-    <h2 id="scopeHeading">Scope and Sequence (Approximate)</h2>
+<div class="container" display="none">
+
+    <h1> HSC Physics </h1>
+    <button onclick="window.open('cyu.html', '_blank')" class="cyu-button">Check Your Understanding (CYU) Questions</button>
+    <h2> Scope and Sequence (Approximate) </h2>
     <img src="PHYSS.png" alt="Physics Scope and Sequence" class="top-banner">
-    <h2 id="progressHeading" style="display:none;">Progress</h2>
+    <h2> Progress </h2>
+<div class="legend" style="display: none;">
+  Started = Started the Learning Activities. <br>
+  Completed = Finished all the Learning Activities. <br>
+  Marked = Learning Activities marked using solutions or marking rubrics. <br>
+  Mastered = All Learning Activities are completed with no errors.
+</div>
 
-    <!-- Legend for progress chart -->
-    <div class="legend" style="display: none;">
-      Started = Started the Learning Activities. <br>
-      Completed = Finished all the Learning Activities. <br>
-      Marked = Learning Activities marked using solutions or marking rubrics. <br>
-      Mastered = All Learning Activities are completed with no errors.
-    </div>
+<!-- Add a new section for the progress chart -->
+<section id="progressChartContainer">
+  <button id="toggleChartButton" onclick="toggleChartVisibility()">Collapse Chart</button>
+  <h2>Module Progress</h2>
+  <canvas id="progressChart"></canvas>
+</section>
 
-    <!-- Progress chart section -->
-    <section id="progressChartContainer" style="display:none;">
-      <button id="toggleChartButton" onclick="toggleChartVisibility()">Collapse Chart</button>
-      <h2>Module Progress</h2>
-      <canvas id="progressChart"></canvas>
-    </section>
 
-    <div id="authStatus"><span id="statusIcon">Logged Out</span></div>
+  
+<div id="authStatus"><span id="statusIcon">Logged Out</span></div>
 
-    <button id="authToggleButton" onclick="window.toggleAuthModal()">Login</button>
+<body>
+  <button id="authToggleButton" onclick="toggleAuthModal()">Login</button>
+  
+  <!-- Login Modal -->
+  <div id="loginModal" class="auth-modal" style="display: none;">
+    <h2>Login</h2>
+    <input type="email" id="loginEmail" placeholder="Email" required>
+    <input type="password" id="loginPassword" placeholder="Password" required>
+    <button onclick="handleLogin()">Login</button>
+    <p>Not registered yet? <a href="#" onclick="toggleRegisterModal()">Click here</a></p>
+  </div>
 
-    <!-- Login Modal -->
-    <div id="loginModal" class="auth-modal" style="display: none;">
-      <h2>Login</h2>
-      <input type="email" id="loginEmail" placeholder="Email" required>
-      <input type="password" id="loginPassword" placeholder="Password" required>
-      <button onclick="window.handleLogin()">Login</button>
-      <p>Not registered yet? <a href="#" onclick="window.toggleRegisterModal()">Click here</a></p>
-    </div>
+  <!-- Register Modal -->
+  <div id="registerModal" class="auth-modal" style="display: none;">
+    <h2>Register</h2>
+    <input type="email" id="registerEmail" placeholder="Email" required>
+    <input type="password" id="registerPassword" placeholder="Password" required>
+    <input type="text" id="registerFirstName" placeholder="First Name" required>
+    <input type="text" id="registerLastName" placeholder="Last Name" required>
+    <button onclick="handleRegister()">Submit</button>
+  </div>
 
-    <!-- Register Modal -->
-    <div id="registerModal" class="auth-modal" style="display: none;">
-      <h2>Register</h2>
-      <input type="email" id="registerEmail" placeholder="Email" required>
-      <input type="password" id="registerPassword" placeholder="Password" required>
-      <input type="text" id="registerFirstName" placeholder="First Name" required>
-      <input type="text" id="registerLastName" placeholder="Last Name" required>
-      <button onclick="window.handleRegister()">Submit</button>
-    </div>
+  <!-- Checklist Section for Lesson Progress -->
+  <section id="taskChecklist" style="display:none;">
+    <h2>Lesson Checklist</h2>
+  </section>
 
-    <!-- Lesson Checklist Section -->
-    <section id="taskChecklist" style="display:none;">
-      <h2>Lesson Checklist</h2>
-    </section>
 
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
-      import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
-      import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-      import { lessonLinks, lessonData, lessonNames } from './lessonLinks.js';
 
-      const firebaseConfig = {
-        apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
-        authDomain: "koglinsphysicsclass.firebaseapp.com",
-        projectId: "koglinsphysicsclass",
-        storageBucket: "koglinsphysicsclass.appspot.com",
-        messagingSenderId: "1051481871959",
-        appId: "1:1051481871959:web:40bc24648d3a4f91f87512"
-      };
+  <!-- Checklist Section for Lesson Progress -->
+  <section id="taskChecklist" style="display:none;">
+    <h2>Lesson Checklist</h2>
+  </section>
 
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth();
-      const db = getFirestore(app);
 
-      setPersistence(auth, browserLocalPersistence)
-        .then(() => initAuthListener())
-        .catch((error) => console.error("Error setting persistence:", error));
 
-      const cyuButton = document.getElementById("cyuButton");
-      const progressChartContainer = document.getElementById("progressChartContainer");
-      const progressHeading = document.getElementById("progressHeading");
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { lessonLinks, lessonData, lessonNames } from './lessonLinks.js';
 
-      // Function to toggle the authentication modal
-      window.toggleAuthModal = function() {
-        const loginModal = document.getElementById("loginModal");
-        loginModal.style.display = loginModal.style.display === "none" ? "block" : "none";
-      };
 
-      // Function to show registration modal
-      window.toggleRegisterModal = function() {
-        document.getElementById("loginModal").style.display = "none";
-        document.getElementById("registerModal").style.display = "block";
-      };
 
-      window.handleLogin = async function() {
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          window.toggleAuthModal();
-          updateStatus(true);
-        } catch (error) {
-          alert("Login failed: " + error.message);
-        }
-      };
 
-      window.handleRegister = async function() {
-        const email = document.getElementById("registerEmail").value;
-        const password = document.getElementById("registerPassword").value;
-        const firstName = document.getElementById("registerFirstName").value;
-        const lastName = document.getElementById("registerLastName").value;
 
-        try {
-          const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-          await saveUserData(userCredential.user.uid, firstName, lastName);
-          alert(`Registration successful! Welcome ${firstName}`);
-          window.toggleRegisterModal();
-        } catch (error) {
-          alert("Registration failed: " + error.message);
-        }
-      };
 
-      async function saveUserData(uid, firstName, lastName) {
-        try {
-          await setDoc(doc(db, "users", uid), { firstName, lastName });
-        } catch (error) {
-          console.error("Error saving user data:", error);
-        }
-      }
+    
+    const firebaseConfig = {
+      apiKey: "AIzaSyCCNFF9Au24okmKbH6ojbZB6xZIGddyo2U",
+      authDomain: "koglinsphysicsclass.firebaseapp.com",
+      projectId: "koglinsphysicsclass",
+      storageBucket: "koglinsphysicsclass.appspot.com",
+      messagingSenderId: "1051481871959",
+      appId: "1:1051481871959:web:40bc24648d3a4f91f87512"
+    };
 
-      function updateStatus(isLoggedIn) {
-        if (isLoggedIn) {
-          document.getElementById("authToggleButton").textContent = "Logout";
-          cyuButton.style.display = "inline";
-          progressChartContainer.style.display = "block";
-          progressHeading.style.display = "block";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+    const db = getFirestore(app);
+
+
+
+
+
+      // Attach modal toggle functions to the window object
+  window.toggleAuthModal = function() {
+    const loginModal = document.getElementById('loginModal');
+    const registerModal = document.getElementById('registerModal');
+    loginModal.style.display = loginModal.style.display === 'none' ? 'block' : 'none';
+    registerModal.style.display = 'none';
+  }
+
+  window.toggleRegisterModal = function() {
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('registerModal').style.display = 'block';
+  }
+
+  // Attach the click event to authToggleButton
+  document.getElementById('authToggleButton').addEventListener('click', () => {
+    const authToggleButton = document.getElementById('authToggleButton');
+    if (authToggleButton.textContent === 'Logout') {
+      handleLogout();
+    } else {
+      toggleAuthModal();
+    }
+  });
+    
+
+
+    
+    setPersistence(auth, browserLocalPersistence)
+      .then(() => initAuthListener())
+      .catch((error) => {
+        console.error("Error setting persistence:", error);
+      });
+
+    const statusIcon = document.getElementById('statusIcon');
+    const logoutButton = document.getElementById('logoutButton');
+    const taskChecklist = document.getElementById('taskChecklist');
+
+    async function loadUserData(uid) {
+      try {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          console.log("User data loaded:", docSnap.data());
+          return docSnap.data();
         } else {
-          document.getElementById("authToggleButton").textContent = "Login";
-          cyuButton.style.display = "none";
-          progressChartContainer.style.display = "none";
-          progressHeading.style.display = "none";
+          console.log("No user data found.");
+          return null;
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+        return null;
+      }
+    }
+
+
+
+
+
+
+
+// Function to toggle chart visibility
+window.toggleChartVisibility = function() {
+  const chart = document.getElementById('progressChart');
+  const toggleButton = document.getElementById('toggleChartButton');
+  if (chart.style.display === 'none') {
+    chart.style.display = 'block';
+    toggleButton.textContent = 'Collapse Chart';
+  } else {
+    chart.style.display = 'none';
+    toggleButton.textContent = 'Expand Chart';
+  }
+};
+
+
+
+
+
+    
+    
+
+
+
+
+window.renderProgressChart = function() {
+  const moduleNames = Object.keys(lessonData);
+  const completedData = [];
+  const masteredData = [];
+  let totalCompletedCount = 0, totalMasteredCount = 0, totalLessonCount = 0;
+
+  moduleNames.forEach(module => {
+    const lessonCount = lessonData[module];
+    let completedCount = 0, masteredCount = 0;
+    for (let i = 1; i <= lessonCount; i++) {
+      const lessonKey = `${module}-${i}`;
+      if (document.getElementById(`completed-${lessonKey}`).checked) completedCount++;
+      if (document.getElementById(`mastered-${lessonKey}`).checked) masteredCount++;
+    }
+    completedData.push((completedCount / lessonCount) * 100);
+    masteredData.push((masteredCount / lessonCount) * 100);
+    totalCompletedCount += completedCount;
+    totalMasteredCount += masteredCount;
+    totalLessonCount += lessonCount;
+  });
+
+  const overallCompleted = (totalCompletedCount / totalLessonCount) * 100;
+  const overallMastered = (totalMasteredCount / totalLessonCount) * 100;
+  moduleNames.push('Overall');
+  completedData.push(overallCompleted);
+  masteredData.push(overallMastered);
+
+  const ctx = document.getElementById('progressChart').getContext('2d');
+  if (window.progressChart instanceof Chart) window.progressChart.destroy();
+
+  window.progressChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: moduleNames,
+      datasets: [
+        {
+          label: 'Completed (%)',
+          data: completedData.map(value => value / 2),
+          backgroundColor: 'rgba(75, 192, 192, 0.6)',
+          barPercentage: 1.0,
+          categoryPercentage: 0.6,
+          xAxisID: 'xLeft',
+        },
+        {
+          label: 'Mastered (%)',
+          data: masteredData.map(value => value / 2),
+          backgroundColor: 'rgba(153, 102, 255, 0.6)',
+          barPercentage: 1.0,
+          categoryPercentage: 0.6,
+          xAxisID: 'xRight',
+        }
+      ]
+    },
+    options: {
+      indexAxis: 'y',
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        xLeft: {
+          type: 'linear',
+          position: 'bottom',
+          min: 0,
+          max: 100,
+          ticks: {
+            display: false // Hide the ticks at the bottom
+          },
+          grid: {
+            display: false // Optional: also hide the grid lines on this axis
+          }
+        },
+        xRight: {
+          type: 'linear',
+          position: 'top',
+          min: 0,
+          max: 100,
+          reverse: true,
+          ticks: {
+            color: '#ffffff',
+            stepSize: 10, // smaller means closer together
+            precision: 0,
+            callback: function(value) {
+              return value === 50 ? '100%' : ''; // Show only 100% at midpoint
+            }
+        },
+          grid: {
+            drawOnChartArea: true // Show the grid lines on the top axis
+          }
+        },
+        y: {
+          stacked: true,
+          ticks: {
+            color: '#ffffff'
+          }
+        }
+      },
+      plugins: {
+        legend: {
+          labels: {
+            color: '#ffffff' // Set legend text color to white
+          }
         }
       }
+    }
+  });
+};
 
-      function initAuthListener() {
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            updateStatus(true);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+
+    window.renderProgressChart = renderProgressChart;
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+    
+
+
+
+
+    
+
+function generateChecklist() {
+  taskChecklist.innerHTML = '';
+  for (const [section, lessonCount] of Object.entries(lessonData)) {
+    for (let i = 1; i <= lessonCount; i++) {
+      const lessonName = lessonNames[section] && lessonNames[section][i - 1]
+        ? lessonNames[section][i - 1]
+        : `Physics Lesson`;
+
+      const lessonKey = `${section}-${i}`;
+      const taskDiv = document.createElement('div');
+      taskDiv.className = 'task';
+      taskDiv.id = `task-${lessonKey}`;
+
+      const linkButton = `
+        <button class="link-button">
+          <a href="${lessonLinks[lessonKey] || '#'}" target="_blank">🔗</a>
+        </button>
+      `;
+
+      const checkboxContainer = `
+        <div class="checkbox-container">
+          <label class="checkbox-heading">${section} Lesson ${i}: ${lessonName}</label>
+          <div class="checkbox-item">
+            <input type="checkbox" id="started-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
+            <label for="started-${lessonKey}">Started</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="completed-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
+            <label for="completed-${lessonKey}">Completed</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="checked-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
+            <label for="checked-${lessonKey}">Marked</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="mastered-${lessonKey}" onclick="updateTaskColor('${lessonKey}'); renderProgressChart();">
+            <label for="mastered-${lessonKey}">Mastered</label>
+          </div>
+        </div>
+      `;
+
+      taskDiv.innerHTML = checkboxContainer + linkButton;
+      taskChecklist.appendChild(taskDiv);
+      updateTaskColor(lessonKey);
+    }
+  }
+
+  taskChecklist.innerHTML += `<button class="save-progress-button" onclick="saveProgress()">Save Progress</button>`;
+}
+
+
+window.generateChecklist = generateChecklist;
+
+
+
+
+
+
+
+
+// Function to update task color based on checked checkboxes
+function updateTaskColor(key) {
+  const taskDiv = document.getElementById(`task-${key}`);
+  if (!taskDiv) return;
+
+  const checkboxes = [
+    document.getElementById(`started-${key}`),
+    document.getElementById(`completed-${key}`),
+    document.getElementById(`checked-${key}`),
+    document.getElementById(`mastered-${key}`)
+  ];
+
+  // Count checked boxes
+  const checkedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+
+  // Remove all color classes
+  taskDiv.classList.remove('colourFour', 'colourThree', 'colourTwo', 'colourOne', 'colourNone');
+
+  // Apply the color based on the count
+  if (checkedCount === 4) {
+    taskDiv.classList.add('colourFour');
+  } else if (checkedCount === 3) {
+    taskDiv.classList.add('colourThree');
+  } else if (checkedCount === 2) {
+    taskDiv.classList.add('colourTwo');
+  } else if (checkedCount === 1) {
+    taskDiv.classList.add('colourOne');
+  } else {
+    taskDiv.classList.add('colourNone');
+  }
+}
+
+// Attach to window for global access
+window.updateTaskColor = updateTaskColor;
+
+
+    
+
+
+async function loadTaskProgress(uid) {
+  try {
+    const docRef = doc(db, "tasks", uid);
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      const tasks = docSnap.data().tasks;
+      for (const [key, progress] of Object.entries(tasks)) {
+        const startedCheckbox = document.getElementById(`started-${key}`);
+        const completedCheckbox = document.getElementById(`completed-${key}`);
+        const checkedCheckbox = document.getElementById(`checked-${key}`);
+        const masteredCheckbox = document.getElementById(`mastered-${key}`);
+
+        if (startedCheckbox) startedCheckbox.checked = Boolean(progress.started);
+        if (completedCheckbox) completedCheckbox.checked = Boolean(progress.completed);
+        if (checkedCheckbox) checkedCheckbox.checked = Boolean(progress.checked);
+        if (masteredCheckbox) masteredCheckbox.checked = Boolean(progress.mastered);
+
+        // Update the color based on the loaded checkbox states
+        updateTaskColor(key);
+      }
+      console.log("Checkboxes updated to reflect task progress.");
+    } else {
+      console.log("No task progress found for this user.");
+    }
+    // Render the chart after loading progress
+    renderProgressChart();
+  } catch (error) {
+    console.error("Error loading task progress:", error);
+  }
+}
+
+
+
+
+
+
+
+
+    
+
+// Modify the button and hide modals after login
+function updateStatus(isLoggedIn, userData = null) {
+  const authToggleButton = document.getElementById('authToggleButton');
+  const loginModal = document.getElementById('loginModal');
+  const registerModal = document.getElementById('registerModal');
+  const statusIcon = document.getElementById('statusIcon'); // Ensure this element is referenced here
+  
+  if (isLoggedIn && userData) {
+    authToggleButton.textContent = 'Logout';
+    loginModal.style.display = 'none';
+    registerModal.style.display = 'none';
+    taskChecklist.style.display = 'block';
+    statusIcon.textContent = `${userData.firstName}`; // Update with user name
+  } else {
+    authToggleButton.textContent = 'Login';
+    taskChecklist.style.display = 'none';
+    statusIcon.textContent = 'Logged Out'; // Set status to 'Logged Out'
+  }
+}
+
+
+
+
+
+    
+document.getElementById('authToggleButton').addEventListener('click', () => {
+  if (authToggleButton.textContent === 'Logout') {
+    handleLogout();
+  } else {
+    toggleAuthModal();
+  }
+});
+
+
+
+
+
+
+    
+
+    function initAuthListener() {
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          const userData = await loadUserData(user.uid);
+          if (userData) {
+            updateStatus(true, userData);
+            generateChecklist();
+            await loadTaskProgress(user.uid);
           } else {
             updateStatus(false);
           }
-        });
-      }
-
-      window.handleLogout = async function() {
-        try {
-          await signOut(auth);
-          alert("Logout successful!");
-          updateStatus(false);
-        } catch (error) {
-          console.error("Error logging out:", error);
-        }
-      };
-      
-      document.getElementById("authToggleButton").addEventListener("click", () => {
-        const authToggleButton = document.getElementById("authToggleButton");
-        if (authToggleButton.textContent === "Logout") {
-          window.handleLogout();
         } else {
-          window.toggleAuthModal();
+          updateStatus(false);
         }
       });
-    </script>
+    }
+
+    window.handleRegister = function() {
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const firstName = document.getElementById('registerFirstName').value;
+      const lastName = document.getElementById('registerLastName').value;
+
+      createUserWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          saveUserData(userCredential.user.uid, firstName, lastName);
+          alert(`Registration successful! Welcome ${firstName}`);
+        })
+        .catch(error => {
+          console.error("Error registering:", error);
+          alert("Registration failed: " + error.message);
+        });
+    }
+
+    window.handleLogin = function() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+          loadUserData(userCredential.user.uid).then(userData => {
+            updateStatus(true, userData);
+            generateChecklist();
+            loadTaskProgress(userCredential.user.uid);
+          });
+        })
+        .catch(error => {
+          console.error("Error logging in:", error);
+          alert("Login failed: " + error.message);
+        });
+    }
+
+    window.handleLogout = function() {
+      signOut(auth)
+        .then(() => {
+          alert("Logout successful!");
+          updateStatus(false);
+        })
+        .catch(error => {
+          console.error("Error logging out:", error);
+          alert("Logout failed: " + error.message);
+        });
+    }
+
+    async function saveUserData(uid, firstName, lastName) {
+      try {
+        await setDoc(doc(db, "users", uid), { firstName, lastName });
+        console.log("User data saved successfully.");
+      } catch (error) {
+        console.error("Error saving user data:", error);
+      }
+    }
+
+    window.saveProgress = function() {
+      const tasks = {};
+      for (const section in lessonData) {
+        for (let i = 1; i <= lessonData[section]; i++) {
+          const key = `${section}-${i}`;
+          tasks[key] = {
+            started: document.getElementById(`started-${key}`).checked,
+            completed: document.getElementById(`completed-${key}`).checked,
+            checked: document.getElementById(`checked-${key}`).checked,
+            mastered: document.getElementById(`mastered-${key}`).checked
+          };
+        }
+      }
+      const user = auth.currentUser;
+      if (user) {
+        saveTaskProgress(user.uid, tasks);
+        alert("Progress saved!");
+      } else {
+        alert("Please log in to save progress.");
+      }
+    }
+
+    async function saveTaskProgress(uid, tasks) {
+      try {
+        await setDoc(doc(db, "tasks", uid), { tasks });
+        console.log("Task progress saved successfully.");
+      } catch (error) {
+        console.error("Error saving task progress:", error);
+      }
+    }
+  </script>
 </div>
 </body>
 </html>
