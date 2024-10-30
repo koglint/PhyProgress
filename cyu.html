@@ -24,10 +24,8 @@
     const auth = getAuth();
     const db = getFirestore(app);
 
-    // Extract module keys from lessonData
     const modules = Object.keys(lessonData);
 
-    // Load existing CYU data and populate the fields
     async function loadCYUData(user) {
       const cyuDoc = await getDoc(doc(db, "cyuScores", user.uid));
       if (cyuDoc.exists()) {
@@ -41,14 +39,13 @@
       }
     }
 
-    // Save CYU data to Firestore with success/failure alert
     async function saveCYUData() {
       const user = auth.currentUser;
       if (user) {
         const cyuData = {};
         modules.forEach(module => {
           const value = document.getElementById(`cyu-${module}`).value;
-          cyuData[module] = value ? parseInt(value) : 0; // Default to 0 if no value is entered
+          cyuData[module] = value ? parseInt(value) : 0;
         });
         try {
           await setDoc(doc(db, "cyuScores", user.uid), cyuData, { merge: true });
@@ -62,7 +59,6 @@
       }
     }
 
-    // Expose saveCYUData to the global scope
     window.saveCYUData = saveCYUData;
 
     onAuthStateChanged(auth, (user) => {
@@ -75,18 +71,19 @@
   </script>
 </head>
 <body>
+  <button type="button" onclick="window.location.href='index.html'" class="back-button">Back to Main Page</button>
   <h1>Enter Your CYU Scores</h1>
   <div id="cyuContainer">
     <form id="cyuForm">
       <button type="button" onclick="saveCYUData()" class="save-cyu-button">Save</button>
+
     </form>
   </div>
 
   <script type="module">
-    import { lessonData } from './lessonLinks.js'; // Re-import lessonData for module keys
+    import { lessonData } from './lessonLinks.js';
     const cyuForm = document.getElementById('cyuForm');
 
-    // Generate input fields for each module section
     Object.keys(lessonData).forEach(module => {
       const label = document.createElement('label');
       label.setAttribute('for', `cyu-${module}`);
