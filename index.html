@@ -3,17 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title> Physics Progress </title>
+  <title>Physics Progress</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="container" display="none">
+
     <h1> HSC Physics </h1>
     <button id="cyuButton" onclick="window.open('cyu.html', '_blank')" class="cyu-button" style="display: none;">Check Your Understanding (CYU) Questions</button>
     <h2> Scope and Sequence (Approximate) </h2>
     <img src="PHYSS.png" alt="Physics Scope and Sequence" class="top-banner">
     <h2 id="progressHeading" style="display: none;"> Progress </h2>
+
 <div class="legend" style="display: none;">
   Started = Started the Learning Activities. <br>
   Completed = Finished all the Learning Activities. <br>
@@ -85,6 +87,23 @@
     window.toggleRegisterModal = function() {
       document.getElementById('loginModal').style.display = 'none';
       document.getElementById('registerModal').style.display = 'block';
+    }
+
+    // Load user data from Firestore
+    async function loadUserData(uid) {
+      try {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data();
+        } else {
+          console.log("No user data found.");
+          return null;
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error);
+        return null;
+      }
     }
 
     // Set visibility for elements based on login status
