@@ -82,7 +82,15 @@ export const lessonLinks = {
   '6.1-1': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.tcyy4s9ro8bi',
   '6.1-2': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.vbo54k9ppw0f',
   '6.1-3': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.ozhe4umfefz0',
-  '6.1-4': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.6ws36315lj8z'
+  '6.1-4': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-1#h.6ws36315lj8z',
+  '6.2-1': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-2',
+  '6.2-2': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-2',
+  '6.2-3': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-2',
+  '6.3-1': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-3',
+  '6.3-2': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-3',
+  '6.3-3': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-3', 
+  '6.3-4': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-3',
+  '6.3-5': 'https://sites.google.com/education.nsw.gov.au/koglinphysics/lessons/module-6-3',
   
   // Add more links as needed
 };
