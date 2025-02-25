@@ -5,8 +5,8 @@ export const lessonData = {
   '5.2': 6,
   '5.3': 6,
   '6.1': 4,
-  '6.2': 4,
-  '6.3': 4,
+  '6.2': 3,
+  '6.3': 5,
   '6.4': 4,
   '7.1': 4,
   '7.2': 4,
@@ -47,7 +47,19 @@ export const lessonNames = {
     'Electric vs Gravitational Trajectories',
     'Charges in Magnetic Fields',
     'Comparing E- and B- Fields'
-  ]
+  ],
+  '6.2': [
+    'The Motor Effect',
+    'Parallel Current Carrying Conductor Prac',
+    'Amperes and Newtons Third Law'
+  ],
+  '6.3': [
+    'Magnetic Flux',
+    'Faradays Law',
+    'Lenz Law',
+    'Ideal Transformers',
+    'Uses of Transformers'
+  ],
   // Add more sections as needed
 };
 
