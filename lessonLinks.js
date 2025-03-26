@@ -60,6 +60,14 @@ export const lessonNames = {
     'Ideal Transformers',
     'Uses of Transformers'
   ],
+  '6.4': [
+    'DC Motors',
+    'Back EMF',
+    'AC Induction Motors',
+    'DC Generators',
+    'AC Generators',
+    'Magnetic Braking'
+  ],
   // Add more sections as needed
 };
 
@@ -91,6 +99,12 @@ export const lessonLinks = {
   '6.3-3': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-3', 
   '6.3-4': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-3',
   '6.3-5': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-3',
+  '6.4-1': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
+  '6.4-2': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
+  '6.4-3': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
+  '6.4-4': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
+  '6.4-5': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
+  '6.4-6': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
   
   // Add more links as needed
 };
