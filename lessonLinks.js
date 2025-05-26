@@ -68,6 +68,24 @@ export const lessonNames = {
     'AC Generators',
     'Magnetic Braking'
   ],
+  '7.1': [
+    'James Clerk Maxwell',
+    'Construction of Light',
+    'Speed of Light',
+    'Spectra',
+    'Stellar Spectra'
+  ],
+  '7.2': [
+    'Diffraction of Light',
+    'Youngs Interference',
+    'Newton vs Huygens',
+    'Malus Polarisation Law'
+  ],
+  '7.3': [
+    'Blackbody Radiation and Wiens Law',
+    'The Ultraviolet Catastrophe and Quantisation',
+    'Photoelectric Effect'
+  ],
   // Add more sections as needed
 };
 
@@ -105,6 +123,18 @@ export const lessonLinks = {
   '6.4-4': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
   '6.4-5': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
   '6.4-6': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-6-4',
+  '7.1-1': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-1',
+  '7.1-2': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-1',
+  '7.1-3': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-1',
+  '7.1-4': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-1',
+  '7.1-5': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-1',
+  '7.2-1': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-2',
+  '7.2-2': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-2',
+  '7.2-3': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-2',
+  '7.2-4': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-2',
+  '7.3-1': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-3',
+  '7.3-2': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-3',
+  '7.3-3': 'https://sites.google.com/education.nsw.gov.au/koglin-physics/lessons/module-7-3'
   
   // Add more links as needed
 };
